@@ -7,6 +7,7 @@ import {Dialogs} from '../dialogs';
 import {DialogsContext, DialogsContextProps} from '../dialogs-context';
 
 const MockComponent: React.FC<{
+	children?: React.ReactNode;
 	collapsed?: boolean;
 	highlighted?: boolean;
 	maximized?: boolean;

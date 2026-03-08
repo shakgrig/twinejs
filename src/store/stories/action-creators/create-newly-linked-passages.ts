@@ -1,8 +1,6 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {
-	CreatePassagesAction,
 	Passage,
-	StoriesState,
+	StoriesThunk,
 	Story
 } from '../stories.types';
 import {passageDefaults} from '../defaults';
@@ -19,7 +17,7 @@ export function createNewlyLinkedPassages(
 	passage: Passage,
 	newText: string,
 	oldText: string
-): Thunk<StoriesState, CreatePassagesAction> {
+): StoriesThunk {
 	if (!story.passages.some(p => p.id === passage.id)) {
 		throw new Error('This passage does not belong to this story.');
 	}

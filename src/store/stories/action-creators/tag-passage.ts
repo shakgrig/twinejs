@@ -1,13 +1,11 @@
 import {
 	Passage,
-	StoriesAction,
-	StoriesState,
+	StoriesThunk,
 	Story,
 	UpdatePassageAction
 } from '../stories.types';
 import {isValidTagName} from '../../../util/tag';
 import {storyPassageTags} from '../getters';
-import {Thunk} from 'react-hook-thunk-reducer';
 import {colorString} from '../../../util/color';
 
 /**
@@ -17,7 +15,7 @@ export function addPassageTag(
 	story: Story,
 	passage: Passage,
 	tagName: string
-): Thunk<StoriesState, StoriesAction> {
+): StoriesThunk {
 	if (passage.story !== story.id) {
 		throw new Error('This passage does not belong to this story.');
 	}

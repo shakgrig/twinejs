@@ -1,5 +1,5 @@
 import {faker} from '@faker-js/faker';
-import {renderHook} from '@testing-library/react-hooks';
+import {renderHook} from '@testing-library/react';
 import * as React from 'react';
 import {DialogsContext} from '../../../dialogs';
 import {Story} from '../../../store/stories';
@@ -30,7 +30,7 @@ describe('useViewCenter', () => {
 	describe('the getCenter() function it returns', () => {
 		it('returns the center of a DOM element ref, adjusted for the story zoom', () => {
 			const {result} = renderHook(() =>
-				useViewCenter(story, {current: el as any})
+				useViewCenter(story, {current: el})
 			);
 
 			expect(result.current.getCenter()).toEqual({
@@ -49,7 +49,7 @@ describe('useViewCenter', () => {
 	describe('the setCenter() function it returns', () => {
 		it('scrolls the element ref to center a position, adjusted for the story zoom', () => {
 			const {result} = renderHook(() =>
-				useViewCenter(story, {current: el as any})
+				useViewCenter(story, {current: el})
 			);
 			const left = faker.number.int();
 			const top = faker.number.int();
@@ -68,7 +68,7 @@ describe('useViewCenter', () => {
 		it('adjusts the center if dialogs are open', () => {
 			const dialogWidth = faker.number.int();
 			const {result} = renderHook(
-				() => useViewCenter(story, {current: el as any}),
+				() => useViewCenter(story, {current: el}),
 				{
 					wrapper: ({children}) => (
 						<FakeStateProvider prefs={{dialogWidth}}>

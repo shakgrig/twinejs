@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconDeviceFloppy, IconHelp, IconMoodSmile} from '@tabler/icons';
+import {IconDeviceFloppy, IconHelp, IconMoodSmile} from '@tabler/icons-react';
 import {IconTwine} from '../../components/image/icon';
 import {isElectronRenderer} from '../../util/is-electron';
 

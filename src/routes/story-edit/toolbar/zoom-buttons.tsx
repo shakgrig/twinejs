@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconGridDots, IconLayoutGrid, IconSquare} from '@tabler/icons';
+import {IconGridDots, IconLayoutGrid, IconSquare} from '@tabler/icons-react';
 import {IconButton} from '../../../components/control/icon-button';
 import {updateStory, useStoriesContext, Story} from '../../../store/stories';
 import './zoom-buttons.css';

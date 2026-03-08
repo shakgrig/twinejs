@@ -1,5 +1,4 @@
-import {Thunk} from 'react-hook-thunk-reducer';
-import {DialogsAction, DialogsState} from '../dialogs.types';
+import {DialogsThunk} from '../dialogs.types';
 import {PassageEditStack} from '../passage-edit';
 
 /**
@@ -10,14 +9,30 @@ export function addPassageEditors(
 	storyId: string,
 	passageIds: string[],
 	editorLimit = 6
-): Thunk<DialogsState, DialogsAction> {
+): DialogsThunk {
 	return (dispatch, state) => {
 		const currentState = state();
 		const passageEditStackIndex = currentState.findIndex(
 			({component}) => component === PassageEditStack
 		);
 
-		if (passageEditStackIndex !== -1) {
+		if (passageEditStackIndex === -1) {
+			// Add a new stack, clamping length.
+			const clampedPassageIds = [...passageIds];
+
+			if (clampedPassageIds.length > editorLimit) {
+				clampedPassageIds.length = editorLimit;
+			}
+
+			dispatch({
+				type: 'addDialog',
+				component: PassageEditStack,
+				props: {
+					storyId,
+					passageIds: clampedPassageIds
+				}
+			});
+		} else {
 			// Put the passage IDs at the start, ensuring there are no duplicates.
 
 			const existing: string[] =
@@ -41,29 +56,13 @@ export function addPassageEditors(
 					passageIds: updatedPassageIds
 				}
 			});
-		} else {
-			// Add a new stack, clamping length.
-			const clampedPassageIds = [...passageIds];
-
-			if (clampedPassageIds.length > editorLimit) {
-				clampedPassageIds.length = editorLimit;
-			}
-
-			dispatch({
-				type: 'addDialog',
-				component: PassageEditStack,
-				props: {
-					storyId,
-					passageIds: clampedPassageIds
-				}
-			});
 		}
 	};
 }
 
 export function removePassageEditors(
 	passageIds: string[]
-): Thunk<DialogsState, DialogsAction> {
+): DialogsThunk {
 	return (dispatch, state) => {
 		const currentState = state();
 		const passageEditStackIndex = currentState.findIndex(

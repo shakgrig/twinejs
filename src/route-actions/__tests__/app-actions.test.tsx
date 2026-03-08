@@ -2,7 +2,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {createMemoryHistory, MemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {Router} from 'react-router';
 import {FakeStateProvider, FakeStateProviderProps} from '../../test-util';
 import {AppActions} from '../app-actions';
 
@@ -11,8 +11,13 @@ describe('<AppActions>', () => {
 		contexts?: FakeStateProviderProps,
 		history?: MemoryHistory
 	) {
+		const resolvedHistory = history ?? createMemoryHistory();
+
 		return render(
-			<Router history={history ?? createMemoryHistory()}>
+			<Router
+				location={resolvedHistory.location}
+				navigator={resolvedHistory}
+			>
 				<FakeStateProvider {...contexts}>
 					<AppActions />
 				</FakeStateProvider>
@@ -49,7 +54,7 @@ describe('<AppActions>', () => {
 
 	it('displays a button that allows users to report bugs', () => {
 		const openSpy = jest
-			.spyOn(window, 'open')
+			.spyOn(globalThis, 'open')
 			.mockReturnValue(undefined as any);
 
 		renderComponent();

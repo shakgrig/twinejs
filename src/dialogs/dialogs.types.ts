@@ -1,4 +1,5 @@
 import {DialogCardProps} from '../components/container/dialog-card';
+import {Thunk, ThunkDispatch} from '../store/thunk.types';
 
 export interface DialogComponentProps
 	extends Omit<DialogCardProps, 'headerLabel'> {
@@ -44,3 +45,7 @@ export type DialogsAction =
 	| {type: 'setDialogHighlighted'; highlighted: boolean; index: number}
 	| {type: 'setDialogMaximized'; maximized: boolean; index: number}
 	| {type: 'setDialogProps'; index: number; props: Record<string, any>};
+
+export type DialogsThunk<R = unknown> = Thunk<DialogsState, DialogsAction, R>;
+
+export type DialogsDispatch = ThunkDispatch<DialogsState, DialogsAction>;

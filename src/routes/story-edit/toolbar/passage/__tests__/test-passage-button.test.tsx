@@ -41,7 +41,7 @@ describe('<TestPassageButton>', () => {
 
 	it('tests the story from the passage when clicked', () => {
 		const openSpy = jest
-			.spyOn(window, 'open')
+			.spyOn(globalThis, 'open')
 			.mockReturnValue(undefined as any);
 		const story = fakeStory();
 

@@ -1,4 +1,4 @@
-import {IconX} from '@tabler/icons';
+import {IconX} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import useErrorBoundary from 'use-error-boundary';
@@ -8,6 +8,7 @@ import {Card} from '../card';
 import './dialog-card.css';
 
 export interface BackgroundDialogCardProps {
+	children?: React.ReactNode;
 	headerDisplayLabel?: React.ReactNode;
 	headerLabel: string;
 	onClose: (event?: React.MouseEvent) => void;

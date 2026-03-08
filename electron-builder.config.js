@@ -1,6 +1,6 @@
-const {notarize} = require('@electron/notarize');
-const path = require('path');
-const pkg = require('./package.json');
+import {notarize} from '@electron/notarize';
+import path from 'node:path';
+import pkg from './package.json';
 
 const isPreview =
 	/alpha|beta|pre/.test(pkg.version) || process.env.FORCE_PREVIEW;

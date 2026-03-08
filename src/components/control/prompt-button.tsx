@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconCheck, IconX} from '@tabler/icons';
+import {IconCheck, IconX} from '@tabler/icons-react';
 import {ButtonBar} from '../container/button-bar';
 import {CardContent} from '../container/card';
 import {CardButton, CardButtonProps} from './card-button';
@@ -49,19 +49,29 @@ export const PromptButton: React.FC<PromptButtonProps> = props => {
 	} = props;
 	const mounted = React.useRef(true);
 	const [open, setOpen] = React.useState(false);
-	const [validation, setValidation] =
-		React.useState<PromptValidationResponse>();
+	const [validation, setValidation] = React.useState<PromptValidationResponse>({
+		valid: true
+	});
 	const {t} = useTranslation();
 
 	React.useEffect(() => {
 		async function updateValidation() {
-			if (validateOn === 'change' && validate) {
-				const validation = await validate(value);
+			try {
+				if (validateOn === 'change' && validate) {
+					const validation = await validate(value);
+
+					if (mounted.current) {
+						setValidation(validation);
+					}
+					return;
+				}
 
 				if (mounted.current) {
-					setValidation(validation);
+					setValidation({valid: true});
 				}
-			} else {
+			} catch (error) {
+				console.error(error);
+
 				if (mounted.current) {
 					setValidation({valid: true});
 				}
@@ -69,7 +79,7 @@ export const PromptButton: React.FC<PromptButtonProps> = props => {
 		}
 
 		updateValidation();
-	}, [validate, value]);
+	}, [validate, validateOn, value]);
 
 	React.useEffect(() => {
 		return () => {
@@ -84,6 +94,7 @@ export const PromptButton: React.FC<PromptButtonProps> = props => {
 
 	async function handleSubmit(event: React.FormEvent) {
 		event.preventDefault();
+		let nextValidation: PromptValidationResponse;
 
 		if (validateOn === 'submit' && validate) {
 			// Temporarily set us invalid so that the submit button is disabled while
@@ -92,24 +103,22 @@ export const PromptButton: React.FC<PromptButtonProps> = props => {
 
 			setValidation(value => ({...value, valid: false}));
 
-			const validation = await validate(value);
+			nextValidation = await validate(value);
 
-			setValidation(validation);
-
-			if (!validation.valid) {
-				return;
-			}
+			setValidation(nextValidation);
+		} else if (validate) {
+			nextValidation = validation ?? {valid: false};
 		} else {
-			setValidation({valid: true});
+			nextValidation = {valid: true};
+			setValidation(nextValidation);
 		}
 
-		// It's possible to submit with the Enter key and bypass us disabling the
-		// submit button, so we need to catch that here.
-
-		if (validation?.valid) {
-			onSubmit(value);
-			setOpen(false);
+		if (!nextValidation.valid) {
+			return;
 		}
+
+		onSubmit(value);
+		setOpen(false);
 	}
 
 	return (

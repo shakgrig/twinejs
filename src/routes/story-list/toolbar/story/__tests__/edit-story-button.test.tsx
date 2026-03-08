@@ -2,7 +2,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {createMemoryHistory, MemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {Router} from 'react-router';
 import {fakeStory} from '../../../../../test-util';
 import {EditStoryButton, EditStoryButtonProps} from '../edit-story-button';
 
@@ -11,8 +11,13 @@ describe('<EditStoryButton>', () => {
 		props?: Partial<EditStoryButtonProps>,
 		history?: MemoryHistory
 	) {
+			const resolvedHistory = history ?? createMemoryHistory();
+
 		return render(
-			<Router history={history ?? createMemoryHistory()}>
+				<Router
+					location={resolvedHistory.location}
+					navigator={resolvedHistory}
+				>
 				<EditStoryButton story={fakeStory()} {...props} />
 			</Router>
 		);

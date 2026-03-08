@@ -1,7 +1,6 @@
 import {v4 as uuid} from '@lukeed/uuid';
-import {Thunk} from 'react-hook-thunk-reducer';
 import {PrefsState} from '../../prefs';
-import {StoriesAction, StoriesState, Story} from '../stories.types';
+import {StoriesThunk, Story} from '../stories.types';
 
 /**
  * Creates a new story with the default story format.
@@ -10,7 +9,7 @@ export function createStory(
 	stories: Story[],
 	prefs: PrefsState,
 	props: Partial<Omit<Story, 'id'>> & Pick<Story, 'name'>
-): Thunk<StoriesState, StoriesAction> {
+): StoriesThunk<string> {
 	const id = uuid();
 
 	if (props.name.trim() === '') {

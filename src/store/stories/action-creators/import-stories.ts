@@ -1,9 +1,6 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {
-	CreateStoryAction,
-	StoriesState,
+	StoriesThunk,
 	Story,
-	UpdateStoryAction
 } from '../stories.types';
 import {storyFileName} from '../../../electron/shared';
 
@@ -13,7 +10,7 @@ import {storyFileName} from '../../../electron/shared';
 export function importStories(
 	toImport: Story[],
 	existingStories: Story[]
-): Thunk<StoriesState, CreateStoryAction | UpdateStoryAction> {
+): StoriesThunk {
 	toImport.forEach(importStory => {
 		if (
 			toImport.some(

@@ -6,7 +6,7 @@ import {Passage, Story} from '../../../stories/stories.types';
  */
 export async function load(): Promise<Story[]> {
 	const stories: Record<string, Story> = {};
-	const serializedStories = window.localStorage.getItem('twine-stories');
+	const serializedStories = globalThis.localStorage.getItem('twine-stories');
 
 	if (!serializedStories) {
 		return [];
@@ -15,8 +15,12 @@ export async function load(): Promise<Story[]> {
 	// First, deserialize stories. We index them by ID so that we can quickly add
 	// passages to them as they are deserialized.
 
-	serializedStories.split(',').forEach(id => {
-		const serializedStory = window.localStorage.getItem(`twine-stories-${id}`);
+	serializedStories
+		.split(',')
+		.map(id => id.trim())
+		.filter(Boolean)
+		.forEach(id => {
+		const serializedStory = globalThis.localStorage.getItem(`twine-stories-${id}`);
 
 		if (!serializedStory) {
 			console.warn(
@@ -46,20 +50,24 @@ export async function load(): Promise<Story[]> {
 				// when we load passages below.
 				passages: []
 			};
-		} catch (e) {
+		} catch {
 			console.warn(
 				`Could not parse story as JSON, skipping: ${serializedStory}`
 			);
 		}
-	});
+		});
 
 	// Then create passages, adding them to their parent story.
 
-	const serializedPassages = window.localStorage.getItem('twine-passages');
+	const serializedPassages = globalThis.localStorage.getItem('twine-passages');
 
 	if (serializedPassages) {
-		serializedPassages.split(',').forEach(id => {
-			const serializedPassage = window.localStorage.getItem(
+		serializedPassages
+			.split(',')
+			.map(id => id.trim())
+			.filter(Boolean)
+			.forEach(id => {
+			const serializedPassage = globalThis.localStorage.getItem(
 				`twine-passages-${id}`
 			);
 
@@ -73,7 +81,7 @@ export async function load(): Promise<Story[]> {
 			try {
 				const passage: Passage = JSON.parse(serializedPassage);
 
-				if (!passage || !passage.story) {
+				if (!passage?.story) {
 					console.warn(
 						`Passage ${id} did not have parent story ID, skipping`,
 						passage
@@ -89,18 +97,18 @@ export async function load(): Promise<Story[]> {
 				}
 
 				stories[passage.story].passages.push({
-					...passageDefaults,
+					...passageDefaults(),
 					...passage,
 
 					// Remove empty tags.
 					tags: passage.tags ? passage.tags.filter(t => t.trim() !== '') : []
 				});
-			} catch (e) {
+			} catch {
 				console.warn(
 					`Could not parse passage as JSON, skipping: ${serializedPassage}`
 				);
 			}
-		});
+			});
 	}
 
 	// Flatten the stories object.

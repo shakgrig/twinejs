@@ -1,19 +1,18 @@
 import {act, render, screen} from '@testing-library/react';
-import {createMemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {MemoryRouter} from 'react-router';
 import {FakeStateProvider} from '../../../../test-util';
 import {StoryListToolbar} from '../story-list-toolbar';
 
 describe('<StoryListToolbar>', () => {
 	async function renderComponent() {
 		const result = render(
-			<Router history={createMemoryHistory()}>
+			<MemoryRouter>
 				<FakeStateProvider>
 					<StoryListToolbar selectedStories={[]} />
 				</FakeStateProvider>
-			</Router>
+			</MemoryRouter>
 		);
 
 		await act(() => Promise.resolve());

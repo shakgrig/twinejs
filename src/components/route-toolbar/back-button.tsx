@@ -1,14 +1,16 @@
-import {IconArrowLeft} from '@tabler/icons';
+import {IconArrowLeft} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router';
 import {IconButton} from '../control/icon-button';
 
 export const BackButton: React.FC = () => {
-	const history = useHistory();
+	const location = useLocation();
+	const navigate = useNavigate();
 	const {t} = useTranslation();
+	const canGoBack = globalThis.history.length > 1;
 
-	if (['/', '/stories'].includes(history.location.pathname)) {
+	if (['/', '/stories'].includes(location.pathname)) {
 		return null;
 	}
 
@@ -17,13 +19,9 @@ export const BackButton: React.FC = () => {
 			icon={<IconArrowLeft />}
 			variant="primary"
 			label={
-				history.length > 1
-					? t('common.back')
-					: t('routes.storyList.titleGeneric')
+				canGoBack ? t('common.back') : t('routes.storyList.titleGeneric')
 			}
-			onClick={() =>
-				history.length > 1 ? history.goBack() : history.push('/')
-			}
+			onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}
 		/>
 	);
 };

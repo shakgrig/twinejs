@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams} from 'react-router';
 import {replaceDom} from '../../util/replace-dom';
 import {usePublishing} from '../../store/use-publishing';
 import {ErrorMessage} from '../../components/error';
@@ -12,6 +12,11 @@ export const StoryProofRoute: React.FC = () => {
 
 	React.useEffect(() => {
 		async function load() {
+			if (!storyId) {
+				setPublishError(new Error('Missing story id in route.'));
+				return;
+			}
+
 			try {
 				replaceDom(await proofStory(storyId));
 			} catch (error) {

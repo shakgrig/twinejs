@@ -1,6 +1,7 @@
 import {render, screen} from '@testing-library/react';
 import {axe} from 'jest-axe';
 import * as React from 'react';
+import * as ReactI18next from 'react-i18next';
 import {useDonationCheck} from '../../../store/prefs/use-donation-check';
 import {
 	FakeStateProvider,
@@ -15,9 +16,49 @@ jest.mock('../../../store/prefs/use-donation-check');
 jest.mock('../../../components/error/safari-warning-card');
 
 describe('<StoryListRoute>', () => {
+	type UseTranslationResult = ReturnType<typeof ReactI18next.useTranslation>;
+
 	const useDonationCheckMock = useDonationCheck as jest.Mock;
+	const useTranslationMock = jest.spyOn(ReactI18next, 'useTranslation');
+
+	function mockUseTranslation(translation: Record<string, string> = {}) {
+		const {createInstance} = jest.requireActual<typeof import('i18next')>(
+			'i18next'
+		);
+		const i18nInstance = createInstance();
+
+		i18nInstance.init({
+			fallbackLng: 'en-US',
+			initImmediate: false,
+			lng: 'en-US',
+			resources: {
+				'en-US': {
+					translation
+				}
+			}
+		});
+
+		const tSpy = jest.spyOn(i18nInstance, 't');
+		const t = i18nInstance.t.bind(i18nInstance);
+		const tuple: [UseTranslationResult[0], UseTranslationResult[1], boolean] = [
+			t,
+			i18nInstance,
+			true
+		];
+		const response: UseTranslationResult = Object.assign(tuple, {
+			i18n: i18nInstance,
+			ready: true,
+			t
+		});
+
+		useTranslationMock.mockReturnValue(response);
+
+		return tSpy;
+	}
 
 	beforeEach(() => {
+		mockUseTranslation();
+
 		useDonationCheckMock.mockReturnValue({
 			shouldShowDonationPrompt: () => false
 		});
@@ -52,6 +93,28 @@ describe('<StoryListRoute>', () => {
 		renderComponent({stories: []});
 		expect(screen.queryByTestId('mock-story-cards')).not.toBeInTheDocument();
 		expect(screen.getByText('routes.storyList.noStories')).toBeInTheDocument();
+	});
+
+	it('uses the explicit zero-count title key when there are no stories', () => {
+		const tSpy = mockUseTranslation({
+			'routes.storyList.titleCount_0': 'No Stories'
+		});
+
+		renderComponent({stories: []});
+		expect(screen.getByText('No Stories')).toBeInTheDocument();
+		expect(tSpy).toHaveBeenCalledWith('routes.storyList.titleCount_0');
+	});
+
+	it('uses count-based translation when there are multiple stories', () => {
+		const tSpy = mockUseTranslation({
+			'routes.storyList.titleCount': 'routes.storyList.titleCount:{{count}}'
+		});
+
+		renderComponent({stories: [fakeStory(), fakeStory()]});
+		expect(screen.getByText('routes.storyList.titleCount:2')).toBeInTheDocument();
+		expect(tSpy).toHaveBeenCalledWith('routes.storyList.titleCount', {
+			count: 2
+		});
 	});
 
 	it('sorts stories by name if the user pref is set to that', () => {

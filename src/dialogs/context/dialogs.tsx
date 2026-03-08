@@ -1,16 +1,25 @@
 import * as React from 'react';
-import {useScrollbarSize} from 'react-scrollbar-size';
+import useScrollbarSize from 'react-scrollbar-size';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import {useDialogsContext} from '.';
+import {Dialog} from '../dialogs.types';
 import {usePrefsContext} from '../../store/prefs';
 import './dialogs.css';
 
-// TODO move this to separate module to avoid circular dep
-const DialogTransition: React.FC = props => (
+// Kept local to avoid introducing a circular dependency.
+const DialogTransition: React.FC<React.PropsWithChildren> = props => (
 	<CSSTransition classNames="pop" timeout={200} {...props}>
 		{props.children}
 	</CSSTransition>
 );
+
+function dialogKey(dialog: Dialog) {
+	const componentName =
+		dialog.component.displayName ?? dialog.component.name ?? 'dialog';
+	const componentProps = dialog.props ? JSON.stringify(dialog.props) : '';
+
+	return `${componentName}:${componentProps}`;
+}
 
 export const Dialogs: React.FC = () => {
 	const {height, width} = useScrollbarSize();
@@ -49,7 +58,7 @@ export const Dialogs: React.FC = () => {
 					};
 
 					return (
-						<DialogTransition key={index}>
+						<DialogTransition key={dialogKey(dialog)}>
 							{dialog.maximized ? (
 								<div className="maximized" style={maximizedStyle}>
 									<dialog.component {...dialog.props} {...managementProps} />

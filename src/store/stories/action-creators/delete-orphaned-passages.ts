@@ -1,10 +1,8 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {parseLinks} from '../../../util/parse-links';
 import {passageIsEmpty} from '../../../util/passage-is-empty';
 import {
-	DeletePassagesAction,
 	Passage,
-	StoriesState,
+	StoriesThunk,
 	Story
 } from '../stories.types';
 
@@ -26,7 +24,7 @@ export function deleteOrphanedPassages(
 	passage: Passage,
 	newText: string,
 	oldText: string
-): Thunk<StoriesState, DeletePassagesAction> {
+): StoriesThunk {
 	if (!story.passages.some(p => p.id === passage.id)) {
 		throw new Error('This passage does not belong to this story.');
 	}

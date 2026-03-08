@@ -1,4 +1,4 @@
-import {IconTrash} from '@tabler/icons';
+import {IconTrash} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ConfirmButton} from '../../../../components/control/confirm-button';

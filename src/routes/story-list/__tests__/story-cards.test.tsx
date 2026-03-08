@@ -2,7 +2,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {createMemoryHistory, MemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {Router} from 'react-router';
 import {useStoryLaunch} from '../../../store/use-story-launch';
 import {
 	fakePrefs,
@@ -33,8 +33,13 @@ describe('<StoryCards>', () => {
 		contexts?: FakeStateProviderProps,
 		history?: MemoryHistory
 	) {
+		const resolvedHistory = history ?? createMemoryHistory();
+
 		const result = render(
-			<Router history={history ?? createMemoryHistory()}>
+			<Router
+				location={resolvedHistory.location}
+				navigator={resolvedHistory}
+			>
 				<FakeStateProvider {...contexts}>
 					<StoryCards
 						onSelectStory={jest.fn()}
@@ -71,7 +76,7 @@ describe('<StoryCards>', () => {
 		);
 		expect(
 			JSON.parse(
-				screen.getByTestId('pref-inspector-storyTagColors').textContent!
+				screen.getByTestId('pref-inspector-storyTagColors').textContent
 			)
 		).toEqual({
 			'mock-existing-tag': 'red'
@@ -79,7 +84,7 @@ describe('<StoryCards>', () => {
 		fireEvent.click(screen.getByText('onChangeTagColor'));
 		expect(
 			JSON.parse(
-				screen.getByTestId('pref-inspector-storyTagColors').textContent!
+				screen.getByTestId('pref-inspector-storyTagColors').textContent
 			)
 		).toEqual({
 			'mock-existing-tag': 'red',

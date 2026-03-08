@@ -1,9 +1,7 @@
 import {act, render, screen} from '@testing-library/react';
-import {createMemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Helmet} from 'react-helmet';
-import {Route, Router} from 'react-router-dom';
+import {MemoryRouter, Route, Routes} from 'react-router';
 import {Story, useStoriesContext} from '../../../store/stories';
 import {
 	fakeLoadedStoryFormat,
@@ -23,16 +21,19 @@ const TestStoryEditRoute: React.FC = () => {
 	const {stories} = useStoriesContext();
 
 	return (
-		<Router
-			history={createMemoryHistory({
-				initialEntries: [`/stories/${stories[0].id}`]
-			})}
-		>
-			<Route path="/stories/:storyId">
-				<InnerStoryEditRoute />
-				<StoryInspector />
-			</Route>
-		</Router>
+		<MemoryRouter initialEntries={[`/stories/${stories[0].id}`]}>
+			<Routes>
+				<Route
+					path="/stories/:storyId"
+					element={
+						<>
+							<InnerStoryEditRoute />
+							<StoryInspector />
+						</>
+					}
+				/>
+			</Routes>
+		</MemoryRouter>
 	);
 };
 
@@ -67,7 +68,7 @@ describe('<StoryEditRoute>', () => {
 		jest.useRealTimers();
 
 		// Need this because of <PromptButton>
-		await act(async () => Promise.resolve());
+		await act(async () => {});
 		return result;
 	}
 
@@ -75,7 +76,7 @@ describe('<StoryEditRoute>', () => {
 		const story = fakeStory();
 
 		await renderComponent(story);
-		expect(Helmet.peek().title).toBe(story.name);
+		expect(document.title).toBe(story.name);
 	});
 
 	it('displays the toolbar', async () => {
@@ -90,7 +91,7 @@ describe('<StoryEditRoute>', () => {
 
 	it('sets up zoom keyboard shortcuts', async () => {
 		await renderComponent(fakeStory());
-		expect(useZoomShortcutsMock).toBeCalled();
+		expect(useZoomShortcutsMock).toHaveBeenCalled();
 	});
 
 	it('is accessible', async () => {

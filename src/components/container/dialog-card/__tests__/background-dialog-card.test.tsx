@@ -64,7 +64,7 @@ describe('<BackgroundDialogCard>', () => {
 		jest.spyOn(console, 'error').mockReturnValue();
 
 		const BadComponent = () => {
-			throw new Error();
+			throw new Error('Mock crash');
 		};
 
 		render(

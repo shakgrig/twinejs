@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
-import {IconPlus} from '@tabler/icons';
+import {useNavigate} from 'react-router';
+import {IconPlus} from '@tabler/icons-react';
 import {usePrefsContext} from '../../../../store/prefs';
 import {
 	createStory,
@@ -19,9 +19,26 @@ export const CreateStoryButton: React.FC = () => {
 			stories.map(story => story.name)
 		)
 	);
-	const history = useHistory();
+	const navigate = useNavigate();
 	const {prefs} = usePrefsContext();
 	const {t} = useTranslation();
+
+	React.useEffect(() => {
+		setNewName(currentName => {
+			const existingNames = stories
+				.map(story => story.name)
+				.filter((name): name is string => typeof name === 'string');
+
+			if (
+				currentName.trim() === '' ||
+				existingNames.some(name => name.toLowerCase() === currentName.toLowerCase())
+			) {
+				return unusedName(storyDefaults().name, existingNames);
+			}
+
+			return currentName;
+		});
+	}, [stories]);
 
 	function validateName(value: string) {
 		if (value.trim() === '') {
@@ -32,7 +49,11 @@ export const CreateStoryButton: React.FC = () => {
 		}
 
 		if (
-			stories.some(story => story.name.toLowerCase() === value.toLowerCase())
+			stories.some(
+				story =>
+					typeof story.name === 'string' &&
+					story.name.toLowerCase() === value.toLowerCase()
+			)
 		) {
 			return {
 				valid: false,
@@ -44,12 +65,23 @@ export const CreateStoryButton: React.FC = () => {
 	}
 
 	function handleSubmit() {
-		const id = createStory(stories, prefs, {name: newName})(
-			dispatch,
-			() => stories
-		);
+		const validation = validateName(newName);
 
-		history.push(`/stories/${id}`);
+		if (!validation.valid) {
+			return;
+		}
+
+		try {
+			const id = createStory(stories, prefs, {name: newName})(
+				dispatch,
+				() => stories
+			);
+
+			navigate(`/stories/${id}`);
+		} catch (error) {
+			console.error(error);
+			globalThis.alert((error as Error).message);
+		}
 	}
 
 	return (

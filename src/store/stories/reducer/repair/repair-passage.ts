@@ -2,6 +2,53 @@ import {v4 as uuid} from '@lukeed/uuid';
 import {passageDefaults} from '../../defaults';
 import {Passage, Story} from '../../stories.types';
 
+function describeValue(value: unknown) {
+	if (typeof value === 'string') {
+		return `"${value}"`;
+	}
+
+	if (
+		typeof value === 'number' ||
+		typeof value === 'boolean' ||
+		value === null ||
+		value === undefined
+	) {
+		return String(value);
+	}
+
+	try {
+		return JSON.stringify(value);
+	} catch {
+		return '[unserializable-object]';
+	}
+}
+
+function hasPassageIdConflict(
+	parentStory: Story,
+	passage: Passage,
+	passageId: string
+) {
+	return parentStory.passages.some(
+		otherPassage => otherPassage !== passage && otherPassage.id === passageId
+	);
+}
+
+function repairMinimumNumericProp(
+	passage: Passage,
+	repairs: Partial<Passage>,
+	propName: keyof Passage,
+	minimum: number,
+	repairedValue: number,
+	detail: string
+) {
+	const value = passage[propName];
+
+	if (typeof value === 'number' && value < minimum) {
+		logRepair(passage, propName, repairedValue, detail);
+		(repairs[propName] as Passage[typeof propName]) = repairedValue;
+	}
+}
+
 function logRepair(
 	passage: Passage,
 	propName: keyof Passage,
@@ -10,7 +57,9 @@ function logRepair(
 ) {
 	let message =
 		`Repairing passage (name: "${passage.name}", id: ${passage.id}): ` +
-		`setting ${propName} to ${repairedValue}, was ${passage[propName]}`;
+		`setting ${propName} to ${describeValue(repairedValue)}, was ${describeValue(
+			passage[propName]
+		)}`;
 
 	if (detail) {
 		message += ` (${detail})`;
@@ -51,28 +100,14 @@ export function repairPassage(passage: Passage, parentStory: Story): Passage {
 
 	for (const pos of ['left', 'top']) {
 		const posKey = pos as keyof Passage;
-
-		if (
-			typeof passage[posKey] === 'number' &&
-			(passage[posKey] as number) < 0
-		) {
-			logRepair(passage, posKey, 0, 'was negative');
-			(repairs[posKey] as Passage[typeof posKey]) = 0;
-		}
+		repairMinimumNumericProp(passage, repairs, posKey, 0, 0, 'was negative');
 	}
 
 	// Make passage dimensions 5 or greater.
 
 	for (const dim of ['height', 'width']) {
 		const dimKey = dim as keyof Passage;
-
-		if (
-			typeof passage[dimKey] === 'number' &&
-			(passage[dimKey] as number) < 5
-		) {
-			logRepair(passage, dimKey, 0, 'was less than 5');
-			(repairs[dimKey] as Passage[typeof dimKey]) = 5;
-		}
+		repairMinimumNumericProp(passage, repairs, dimKey, 5, 5, 'was less than 5');
 	}
 
 	// Repair story property if it doesn't point to the parent story.
@@ -84,15 +119,7 @@ export function repairPassage(passage: Passage, parentStory: Story): Passage {
 
 	// Repair ID conflicts with any other passage in the story.
 
-	if (
-		parentStory.passages.some(otherPassage => {
-			if (otherPassage === passage) {
-				return false;
-			}
-
-			return otherPassage.id === passage.id;
-		})
-	) {
+	if (hasPassageIdConflict(parentStory, passage, passage.id)) {
 		const newId = uuid();
 
 		logRepair(

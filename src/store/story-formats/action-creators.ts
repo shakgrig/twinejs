@@ -1,10 +1,10 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {fetchStoryFormatProperties} from '../../util/story-format/fetch-properties';
 import {
 	StoryFormat,
 	StoryFormatProperties,
 	StoryFormatsAction,
-	StoryFormatsDispatch
+	StoryFormatsDispatch,
+	StoryFormatsThunk
 } from './story-formats.types';
 
 /**
@@ -59,7 +59,6 @@ async function loadFormatThunk(
 			try {
 				const hydrateResult: Partial<StoryFormatProperties> = {};
 
-				// eslint-disable-next-line no-new-func
 				const hydrateFunc = new Function(properties.hydrate);
 
 				hydrateFunc.call(hydrateResult);
@@ -83,7 +82,7 @@ async function loadFormatThunk(
 		dispatch({
 			type: 'update',
 			id: format.id,
-			props: {loadError: loadError as unknown as Error, loadState: 'error'}
+			props: {loadError: loadError as Error, loadState: 'error'}
 		});
 	}
 }
@@ -94,13 +93,13 @@ async function loadFormatThunk(
  */
 export function loadAllFormatProperties(
 	formats: StoryFormat[]
-): Thunk<StoryFormat[], StoryFormatsAction> {
+): StoryFormatsThunk<Promise<void>> {
 	const toLoad = formats.filter(
 		f => f.loadState !== 'loaded' && f.loadState !== 'loading'
 	);
 
-	if (!toLoad) {
-		return () => {};
+	if (toLoad.length === 0) {
+		return async () => {};
 	}
 
 	return async (dispatch: StoryFormatsDispatch) => {

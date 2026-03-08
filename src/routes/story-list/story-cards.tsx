@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import {CardGroup} from '../../components/container/card-group';
 import {StoryCard} from '../../components/story/story-card';
@@ -22,7 +22,7 @@ export const StoryCards: React.FC<StoryCardsProps> = props => {
 	const {onSelectStory, stories} = props;
 	const {dispatch: prefsDispatch, prefs} = usePrefsContext();
 	const {dispatch: storiesDispatch} = useUndoableStoriesContext();
-	const history = useHistory();
+	const navigate = useNavigate();
 
 	function handleChangeTagColor(tagName: string, color: Color) {
 		prefsDispatch(
@@ -42,14 +42,13 @@ export const StoryCards: React.FC<StoryCardsProps> = props => {
 	}
 
 	return (
-		<>
-			<CardGroup columnWidth={cardWidth}>
+		<CardGroup columnWidth={cardWidth}>
 				<TransitionGroup component={null}>
 					{stories.map(story => (
 						<CSSTransition classNames="pop" key={story.id} timeout={200}>
 							<StoryCard
 								onChangeTagColor={handleChangeTagColor}
-								onEdit={() => history.push(`/stories/${story.id}`)}
+								onEdit={() => navigate(`/stories/${story.id}`)}
 								onRemoveTag={name => handleRemoveTag(story, name)}
 								onSelect={() => onSelectStory(story)}
 								story={story}
@@ -59,6 +58,5 @@ export const StoryCards: React.FC<StoryCardsProps> = props => {
 					))}
 				</TransitionGroup>
 			</CardGroup>
-		</>
 	);
 };

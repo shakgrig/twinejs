@@ -12,6 +12,93 @@ import {
 } from './story-formats';
 import {getAppInfo} from '../util/app-info';
 
+function installCodeMirrorCommands(
+	editorExtensions: ReturnType<typeof formatEditorExtensions>,
+	namespace: string
+) {
+	const commands = editorExtensions?.codeMirror?.commands;
+
+	if (!commands) {
+		return;
+	}
+
+	for (const commandName in commands) {
+		const namespacedCommand = namespace + commandName;
+
+		if (namespacedCommand in CodeMirror.commands) {
+			console.warn(
+				`CodeMirror already has a "${namespacedCommand}" command defined, skipping`
+			);
+			continue;
+		}
+
+		// Using any here because the type is defined with factory commands only.
+
+		(CodeMirror.commands as any)[namespacedCommand] = commands[commandName];
+	}
+}
+
+function namespaceToolbarItems(
+	items: StoryFormatToolbarItem[],
+	namespace: string
+) {
+	return items.reduce((result, item) => {
+		switch (item.type) {
+			case 'button':
+				return [...result, {...item, command: namespace + item.command}];
+
+			case 'menu': {
+				if (!Array.isArray(item.items)) {
+					return result;
+				}
+
+				return [
+					...result,
+					{
+						...item,
+						items: item.items
+							.filter(subitem =>
+								['button', 'separator'].includes(subitem.type)
+							)
+							.map(subitem =>
+								subitem.type === 'separator'
+									? subitem
+									: {...subitem, command: namespace + subitem.command}
+							)
+					}
+				];
+			}
+
+			default:
+				return result;
+		}
+	}, [] as StoryFormatToolbarItem[]);
+}
+
+function createToolbarFactory(
+	editorExtensions: ReturnType<typeof formatEditorExtensions>,
+	namespace: string
+) {
+	const toolbar = editorExtensions?.codeMirror?.toolbar;
+
+	if (!toolbar) {
+		return;
+	}
+
+	return (
+		editor: CodeMirror.Editor,
+		environment: StoryFormatToolbarFactoryEnvironment
+	) => {
+		const items = toolbar(editor, environment);
+
+		if (!Array.isArray(items)) {
+			return [];
+		}
+
+		return namespaceToolbarItems(items, namespace);
+	};
+}
+
 /**
  * Manages working with a CodeMirror toolbar for a story format, which consists
  * of:
@@ -47,102 +134,29 @@ export function useFormatCodeMirrorToolbar(
 
 		if (format.loadState === 'unloaded') {
 			dispatch(loadFormatProperties(format));
-		} else if (
-			format.loadState === 'loaded' &&
-			!loaded[namespaceForFormat(format)]
-		) {
-			const namespace = namespaceForFormat(format);
-			const editorExtensions = formatEditorExtensions(
-				format,
-				getAppInfo().version
-			);
-
-			if (editorExtensions?.codeMirror?.commands) {
-				for (const commandName in editorExtensions.codeMirror.commands) {
-					const namespacedCommand = namespace + commandName;
-
-					if (namespacedCommand in CodeMirror.commands) {
-						console.warn(
-							`CodeMirror already has a "${namespacedCommand}" command defined, skipping`
-						);
-					} else {
-						// Using any here because the type is defined with factory
-						// commands only.
-
-						(CodeMirror.commands as any)[namespacedCommand] =
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							editorExtensions.codeMirror!.commands![commandName];
-					}
-				}
-			}
-
-			if (editorExtensions?.codeMirror?.toolbar) {
-				setToolbarFunc(
-					() =>
-						(
-							editor: CodeMirror.Editor,
-							environment: StoryFormatToolbarFactoryEnvironment
-						) => {
-							// If somehow we lost our format's toolbar function, exit early.
-
-							if (!editorExtensions?.codeMirror?.toolbar) {
-								return [];
-							}
-
-							const items = editorExtensions.codeMirror.toolbar(
-								editor,
-								environment
-							);
-
-							// If we didn't get an array from the function, coerce it to an
-							// empty one.
-
-							if (!Array.isArray(items)) {
-								return [];
-							}
-
-							// Namespace command properties and filter out any types that aren't
-							// buttons or menus.
-
-							return items.reduce((result, item) => {
-								switch (item.type) {
-									case 'button':
-										return [
-											...result,
-											{...item, command: namespace + item.command}
-										];
-
-									case 'menu':
-										if (Array.isArray(item.items)) {
-											return [
-												...result,
-												{
-													...item,
-													items: item.items
-														.filter(subitem =>
-															['button', 'separator'].includes(subitem.type)
-														)
-														.map(subitem =>
-															subitem.type === 'separator'
-																? subitem
-																: {
-																		...subitem,
-																		command: namespace + subitem.command
-																  }
-														)
-												}
-											];
-										}
-								}
-
-								return result;
-							}, [] as StoryFormatToolbarItem[]);
-						}
-				);
-			}
-
-			setLoaded(loaded => ({...loaded, [namespaceForFormat(format)]: true}));
 		}
+
+		if (format.loadState !== 'loaded') {
+			return;
+		}
+
+		const namespace = namespaceForFormat(format);
+
+		if (loaded[namespace]) {
+			return;
+		}
+
+		const editorExtensions = formatEditorExtensions(format, getAppInfo().version);
+
+		installCodeMirrorCommands(editorExtensions, namespace);
+
+		const toolbarFactory = createToolbarFactory(editorExtensions, namespace);
+
+		if (toolbarFactory) {
+			setToolbarFunc(() => toolbarFactory);
+		}
+
+		setLoaded(previous => ({...previous, [namespace]: true}));
 	}, [dispatch, extensionsDisabled, format, loaded]);
 
 	return toolbarFunc;

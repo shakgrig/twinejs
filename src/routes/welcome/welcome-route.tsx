@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {Helmet} from 'react-helmet';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {CSSTransition, TransitionGroup} from 'react-transition-group';
 import scroll from 'scroll';
+import {DocumentTitle} from '../../components/document-title/document-title';
 import {WelcomeCard} from '../../components/welcome/welcome-card';
 import {setPref, usePrefsContext} from '../../store/prefs';
 import {content} from './content';
@@ -12,7 +12,7 @@ import './welcome-route.css';
 export const WelcomeRoute: React.FC = () => {
 	const containerEl = React.useRef<HTMLDivElement>(null);
 	const {dispatch} = usePrefsContext();
-	const history = useHistory();
+	const navigate = useNavigate();
 	const [shown, setShown] = React.useState(1);
 	const allCards = React.useMemo(content, []);
 	const visibleCards = React.useMemo(() => allCards.slice(0, shown), [
@@ -39,16 +39,14 @@ export const WelcomeRoute: React.FC = () => {
 
 	const finish = () => {
 		dispatch(setPref('welcomeSeen', true));
-		history.push('/');
+		navigate('/');
 	};
 
 	const showNext = () => setShown(shown => shown + 1);
 
 	return (
 		<div className="welcome-route" ref={containerEl}>
-			<Helmet>
-				<title>{t('routes.welcome.greetingTitle')}</title>
-			</Helmet>
+			<DocumentTitle title={t('routes.welcome.greetingTitle')} />
 			<div className="cards">
 				<TransitionGroup component={null}>
 					{visibleCards.map((card, index) => (

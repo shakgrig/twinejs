@@ -1,12 +1,11 @@
-import {Thunk} from 'react-hook-thunk-reducer';
-import {StoriesState, Story, UpdateStoryAction} from '../stories.types';
+import {StoriesThunk, Story} from '../stories.types';
 
 /**
  * Deselects a single story.
  */
 export function deselectStory(
 	story: Story
-): Thunk<StoriesState, UpdateStoryAction> {
+): StoriesThunk {
 	return dispatch => {
 		if (!story.selected) {
 			dispatch({
@@ -21,7 +20,7 @@ export function deselectStory(
 /**
  * Deselects all stories.
  */
-export function deselectAllStories(): Thunk<StoriesState, UpdateStoryAction> {
+export function deselectAllStories(): StoriesThunk {
 	return (dispatch, getState) => {
 		for (const story of getState()) {
 			if (story.selected) {
@@ -41,7 +40,7 @@ export function deselectAllStories(): Thunk<StoriesState, UpdateStoryAction> {
 export function selectStory(
 	story: Story,
 	exclusive: boolean
-): Thunk<StoriesState, UpdateStoryAction> {
+): StoriesThunk {
 	return (dispatch, getState) => {
 		if (!story.selected) {
 			dispatch({

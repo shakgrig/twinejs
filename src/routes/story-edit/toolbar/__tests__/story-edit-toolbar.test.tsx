@@ -1,8 +1,7 @@
 import {act, render, screen} from '@testing-library/react';
-import {createMemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {MemoryRouter} from 'react-router';
 import {useStoriesContext} from '../../../../store/stories';
 import {FakeStateProvider} from '../../../../test-util';
 import {StoryEditToolbar} from '../story-edit-toolbar';
@@ -22,11 +21,11 @@ const TestStoryEditToolbar = () => {
 describe('<StoryEditToolbar>', () => {
 	async function renderComponent() {
 		const result = render(
-			<Router history={createMemoryHistory()}>
+			<MemoryRouter>
 				<FakeStateProvider>
 					<TestStoryEditToolbar />
 				</FakeStateProvider>
-			</Router>
+			</MemoryRouter>
 		);
 
 		await act(() => Promise.resolve());

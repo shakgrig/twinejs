@@ -2,7 +2,6 @@ import react from '@vitejs/plugin-react-swc';
 import browserslistToEsbuild from 'browserslist-to-esbuild';
 import {defineConfig} from 'vite';
 import checker from 'vite-plugin-checker';
-import {nodePolyfills} from 'vite-plugin-node-polyfills';
 import {VitePWA} from 'vite-plugin-pwa';
 import packageJson from './package.json';
 
@@ -12,6 +11,10 @@ export default defineConfig({
 		outDir: 'dist/web',
 		target: browserslistToEsbuild(['>0.2%', 'not dead', 'not op_mini all'])
 	},
+	// Fix for Vite 7.x compatibility with packages missing root exports
+	optimizeDeps: {
+		include: ['react-i18next', 'i18next']
+	},
 	define: {
 		// Make app name and version available to code.
 		// https://stackoverflow.com/a/74860417/7569568
@@ -20,16 +23,15 @@ export default defineConfig({
 	},
 	plugins: [
 		checker({
-			eslint: {lintCommand: 'eslint src'},
+			eslint: {
+				lintCommand: 'eslint src',
+				useFlatConfig: true
+			},
 			overlay: {
 				initialIsOpen: false
 			},
 			typescript: true
 		}),
-		nodePolyfills(
-			// We only need a `global` injected, for CodeMirror.
-			{include: [], globals: {global: true}}
-		),
 		react(),
 		VitePWA({
 			manifest: {

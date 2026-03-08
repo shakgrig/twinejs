@@ -3,7 +3,7 @@ import {act, fireEvent, render, screen} from '@testing-library/react';
 import {createMemoryHistory, MemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {Router} from 'react-router';
 import {
 	fakePrefs,
 	FakeStateProvider,
@@ -18,8 +18,13 @@ describe('<CreateStoryButton>', () => {
 		contexts?: FakeStateProviderProps,
 		history?: MemoryHistory
 	) {
+			const resolvedHistory = history ?? createMemoryHistory();
+
 		const result = render(
-			<Router history={history ?? createMemoryHistory()}>
+				<Router
+					location={resolvedHistory.location}
+					navigator={resolvedHistory}
+				>
 				<FakeStateProvider {...contexts}>
 					<CreateStoryButton />
 					<StoryInspector />
@@ -28,9 +33,9 @@ describe('<CreateStoryButton>', () => {
 		);
 
 		// Need this because of <PromptButton>
-		await act(async () => Promise.resolve());
+		await act(async () => {});
 		fireEvent.click(screen.getByText('common.new'));
-		await act(async () => Promise.resolve());
+		await act(async () => {});
 		return result;
 	}
 

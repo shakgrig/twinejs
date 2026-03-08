@@ -97,7 +97,7 @@ export function useZoomTransition(
 			return;
 		}
 
-		window.requestAnimationFrame(timestamp => {
+		globalThis.requestAnimationFrame(timestamp => {
 			const t = transition.current as ZoomTransition;
 
 			if (t.lastTimestamp) {
@@ -162,7 +162,7 @@ export function useZoomTransition(
 					change: target - current
 				}
 			};
-			window.requestAnimationFrame(step);
+			globalThis.requestAnimationFrame(step);
 		}
 	}, [current, scrollTarget, step, target]);
 

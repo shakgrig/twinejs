@@ -1,4 +1,3 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {
 	passageWithId,
 	passageWithName,
@@ -6,9 +5,12 @@ import {
 	Passage,
 	StoriesAction,
 	StoriesState,
+	StoriesThunk,
 	Story
 } from '../stories';
 import {StoriesActionOrThunk} from './undoable-stories.types';
+
+type ReverseStoriesThunk = StoriesThunk<void>;
 
 /**
  * Returns an action or thunk to reverse a single action.
@@ -26,13 +28,15 @@ export function reverseAction(
 					storyId: action.storyId
 				};
 			} else if (action.props.name) {
+				const passageName = action.props.name;
+
 				// This is dependant on the fact that we will only undo this action
 				// immediately--otherwise this could create havoc if the passage has
 				// been renamed in the meantime.
 				//
 				// This also assumes that the create action will succeed--e.g. there are
 				// no conflicts.
-				const reverseThunk: Thunk<StoriesState, StoriesAction> = (
+				const reverseThunk: ReverseStoriesThunk = (
 					dispatch,
 					getState
 				) => {
@@ -41,7 +45,7 @@ export function reverseAction(
 						passageId: passageWithName(
 							getState(),
 							action.storyId,
-							action.props.name!
+							passageName
 						).id,
 						storyId: action.storyId
 					});
@@ -54,16 +58,20 @@ export function reverseAction(
 				);
 			}
 
-		// TODO: crashes on a replace all that affects a passage name, unclear why
+		// Known limitation: this can still crash on a replace-all that changes a
+		// passage name. Root cause remains unresolved.
 
-		case 'createPassages':
+		case 'createPassages': {
 			if (action.props.some(prop => !prop.id && !prop.name)) {
 				throw new Error(
 					"Can't reverse a createPassages action where a prop set doesn't have either name or ID"
 				);
 			}
 
-			return (dispatch, getState) => {
+			const reverseThunk: ReverseStoriesThunk = (
+				dispatch,
+				getState
+			) => {
 				action.props.forEach(props => {
 					if (props.id) {
 						dispatch({
@@ -84,6 +92,9 @@ export function reverseAction(
 					}
 				});
 			};
+
+			return reverseThunk;
+		}
 
 		case 'deletePassage':
 			return {

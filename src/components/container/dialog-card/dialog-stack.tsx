@@ -69,8 +69,8 @@ export const DialogStack: React.FC<DialogStackProps> = ({
 		() =>
 			childKeysInRenderOrder.length ===
 				lastChildKeysInRenderOrder.current?.length &&
-			childKeysInRenderOrder[childKeysInRenderOrder.length - 1] !==
-				lastChildKeysInRenderOrder.current?.[childKeysInRenderOrder.length - 1],
+			childKeysInRenderOrder.at(-1) !==
+				lastChildKeysInRenderOrder.current?.at(-1),
 		[childKeysInRenderOrder]
 	);
 
@@ -93,12 +93,7 @@ export const DialogStack: React.FC<DialogStackProps> = ({
 	// TransitionGroup and CSSTransition should match usage in <Dialogs>.
 
 	return (
-		<div
-			className="dialog-stack"
-			onMouseLeave={() => setExpanded(false)}
-			onClick={() => setExpanded(false)}
-			ref={containerRef}
-		>
+		<div className="dialog-stack" ref={containerRef}>
 			{stackHasOverflow && (
 				<DialogStackExpander
 					dialogLength={children.length}
@@ -130,13 +125,12 @@ export const DialogStack: React.FC<DialogStackProps> = ({
 
 					const cardIsOverflowed =
 						stackHasOverflow && index <= children.length - maxExpandedDialogs;
+					const nonOverflowTopIndex = stackHasOverflow
+						? index - (children.length - maxExpandedDialogs)
+						: index;
 					const top = cardIsOverflowed
 						? `calc(${overflowHeaderHeight} * ${index})`
-						: `calc(${headerHeight} * ${
-								stackHasOverflow
-									? index - (children.length - maxExpandedDialogs)
-									: index
-						  })`;
+						: `calc(${headerHeight} * ${nonOverflowTopIndex})`;
 
 					// When the stack is expanded, all cards get equal height.
 

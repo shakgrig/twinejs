@@ -49,6 +49,25 @@ export const InnerStoryListRoute: React.FC = () => {
 		}
 	}, [prefs.storyListSort, prefs.storyListTagFilter, stories]);
 
+	const title = React.useMemo(() => {
+		const count = visibleStories.length;
+		const baseKey =
+			prefs.storyListTagFilter.length > 0
+				? 'routes.storyList.taggedTitleCount'
+				: 'routes.storyList.titleCount';
+
+		if (count === 0) {
+			const zeroKey = `${baseKey}_0`;
+			const zeroTranslation = t(zeroKey);
+
+			if (zeroTranslation !== zeroKey) {
+				return zeroTranslation;
+			}
+		}
+
+		return t(baseKey, {count});
+	}, [prefs.storyListTagFilter.length, t, visibleStories.length]);
+
 	// Any stories no longer visible should be deselected.
 
 	React.useEffect(() => {
@@ -72,14 +91,7 @@ export const InnerStoryListRoute: React.FC = () => {
 				ignoreSelector=".story-card"
 				onClickAway={() => storiesDispatch(deselectAllStories())}
 			>
-				<MainContent
-					title={t(
-						prefs.storyListTagFilter.length > 0
-							? 'routes.storyList.taggedTitleCount'
-							: 'routes.storyList.titleCount',
-						{count: visibleStories.length}
-					)}
-				>
+				<MainContent title={title}>
 					<SafariWarningCard />
 					<div className="stories">
 						{stories.length === 0 ? (

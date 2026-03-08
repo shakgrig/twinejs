@@ -7,7 +7,7 @@ import {
 	IconMaximize,
 	IconMinimize,
 	IconX
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import {Card} from '../card';
 import {IconButton} from '../../control/icon-button';
 import './dialog-card.css';
@@ -15,6 +15,7 @@ import useErrorBoundary from 'use-error-boundary';
 import {ErrorMessage} from '../../error';
 
 export interface DialogCardProps {
+	children?: React.ReactNode;
 	className?: string;
 	collapsed: boolean;
 	fixedSize?: boolean;
@@ -56,9 +57,9 @@ export const DialogCard: React.FC<DialogCardProps> = props => {
 
 	React.useEffect(() => {
 		if (highlighted) {
-			const timeout = window.setTimeout(() => onChangeHighlighted(false), 400);
+			const timeout = globalThis.setTimeout(() => onChangeHighlighted(false), 400);
 
-			return () => window.clearTimeout(timeout);
+			return () => globalThis.clearTimeout(timeout);
 		}
 	}, [highlighted, onChangeHighlighted]);
 
@@ -69,18 +70,17 @@ export const DialogCard: React.FC<DialogCardProps> = props => {
 		maximized
 	});
 
-	function handleKeyDown(event: React.KeyboardEvent) {
-		if (event.key === 'Escape') {
-			onClose(event);
-		}
+	function handleCancel(event: React.SyntheticEvent<HTMLDialogElement>) {
+		event.preventDefault();
+		onClose();
 	}
 
 	return (
-		<div
+		<dialog
 			aria-label={headerLabel}
-			role="dialog"
 			className={calcdClassName}
-			onKeyDown={handleKeyDown}
+			onCancel={handleCancel}
+			open
 		>
 			<Card floating>
 				<h2>
@@ -123,6 +123,6 @@ export const DialogCard: React.FC<DialogCardProps> = props => {
 					<ErrorBoundary>{!collapsed && children}</ErrorBoundary>
 				)}
 			</Card>
-		</div>
+		</dialog>
 	);
 };

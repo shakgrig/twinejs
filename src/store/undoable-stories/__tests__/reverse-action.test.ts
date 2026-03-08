@@ -1,7 +1,6 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {reverseAction} from '../reverse-action';
 import {fakeStory} from '../../../test-util';
-import {StoriesAction, StoriesState} from '../../stories';
+import {StoriesThunk} from '../../stories';
 
 describe('reverseAction', () => {
 	const story = fakeStory(3);
@@ -32,7 +31,7 @@ describe('reverseAction', () => {
 					storyId: story.id
 				},
 				[story]
-			) as Thunk<StoriesState, StoriesAction>;
+			) as StoriesThunk;
 
 			thunk(dispatch, () => [story]);
 			expect(dispatch.mock.calls).toEqual([

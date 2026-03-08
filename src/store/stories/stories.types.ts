@@ -1,4 +1,4 @@
-import {Thunk} from 'react-hook-thunk-reducer';
+import {Thunk, ThunkDispatch} from '../thunk.types';
 import {Color} from '../../util/color';
 import {StoryFormat} from '../story-formats/story-formats.types';
 
@@ -196,9 +196,9 @@ export type StoriesAction =
 	| DeletePassageAction
 	| DeletePassagesAction;
 
-export type StoriesDispatch = React.Dispatch<
-	StoriesAction | Thunk<StoriesState, StoriesAction>
->;
+export type StoriesThunk<R = unknown> = Thunk<StoriesState, StoriesAction, R>;
+
+export type StoriesDispatch = ThunkDispatch<StoriesState, StoriesAction>;
 
 export interface StorySearchFlags {
 	includePassageNames?: boolean;

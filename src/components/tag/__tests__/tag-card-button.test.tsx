@@ -10,7 +10,6 @@ describe('<TagCardButton>', () => {
 		return render(
 			<TagCardButton
 				allTags={[]}
-				id="test-tag-input"
 				onAdd={jest.fn()}
 				onChangeColor={jest.fn()}
 				onRemove={jest.fn()}
@@ -42,7 +41,7 @@ describe('<TagCardButton>', () => {
 			renderComponent({onAdd});
 			fireEvent.click(screen.getByRole('button', {name: 'common.tags'}));
 			fireEvent.change(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				}),
 				{target: {value: 'new-tag'}}
@@ -75,14 +74,14 @@ describe('<TagCardButton>', () => {
 			renderComponent();
 			fireEvent.click(screen.getByRole('button', {name: 'common.tags'}));
 			fireEvent.change(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				}),
 				{target: {value: 'new-tag'}}
 			);
 			fireEvent.click(screen.getByRole('button', {name: 'common.add'}));
 			expect(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				})
 			).toHaveValue('');
@@ -92,7 +91,7 @@ describe('<TagCardButton>', () => {
 			renderComponent();
 			fireEvent.click(screen.getByRole('button', {name: 'common.tags'}));
 			fireEvent.change(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				}),
 				{target: {value: 'new-tag'}}
@@ -100,7 +99,7 @@ describe('<TagCardButton>', () => {
 			fireEvent.click(screen.getByRole('button', {name: 'common.tags'}));
 			fireEvent.click(screen.getByRole('button', {name: 'common.tags'}));
 			expect(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				})
 			).toHaveValue('');
@@ -114,7 +113,7 @@ describe('<TagCardButton>', () => {
 				})
 			);
 			fireEvent.change(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				}),
 				{target: {value: 'test'}}
@@ -130,7 +129,7 @@ describe('<TagCardButton>', () => {
 				})
 			);
 			fireEvent.change(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				}),
 				{target: {value: 'test'}}
@@ -139,21 +138,12 @@ describe('<TagCardButton>', () => {
 				screen.getByRole('button', {name: 'common.add'})
 			).not.toBeDisabled();
 			fireEvent.change(
-				screen.getByRole('combobox', {
+				screen.getByRole('textbox', {
 					name: 'components.tagCardButton.tagNameLabel'
 				}),
 				{target: {value: ''}}
 			);
 			expect(screen.getByRole('button', {name: 'common.add'})).toBeDisabled();
-		});
-
-		it('passes the id prop to the autocomplete input', () => {
-			renderComponent({id: 'custom-test-id'});
-			fireEvent.click(screen.getByRole('button', {name: 'common.tags'}));
-			const input = screen.getByRole('combobox', {
-				name: 'components.tagCardButton.tagNameLabel'
-			});
-			expect(input).toHaveAttribute('id', 'custom-test-id');
 		});
 
 		describe('The tag list it shows', () => {

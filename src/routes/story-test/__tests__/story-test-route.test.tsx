@@ -1,7 +1,6 @@
 import {render, waitFor} from '@testing-library/react';
-import {createHashHistory} from 'history';
 import * as React from 'react';
-import {HashRouter, Route} from 'react-router-dom';
+import {MemoryRouter, Route, Routes} from 'react-router';
 import {usePublishing} from '../../../store/use-publishing';
 import {StoryTestRoute} from '../story-test-route';
 
@@ -11,18 +10,16 @@ describe('<StoryTestRoute>', () => {
 	const usePublishingMock = usePublishing as jest.Mock;
 
 	function renderComponent(route: string) {
-		const history = createHashHistory();
-
-		history.push(route);
 		return render(
-			<HashRouter>
-				<Route path="/stories/:storyId/test" exact>
-					<StoryTestRoute />
-				</Route>
-				<Route path="/stories/:storyId/test/:passageId" exact>
-					<StoryTestRoute />
-				</Route>
-			</HashRouter>
+			<MemoryRouter initialEntries={[route]}>
+				<Routes>
+					<Route path="/stories/:storyId/test" element={<StoryTestRoute />} />
+					<Route
+						path="/stories/:storyId/test/:passageId"
+						element={<StoryTestRoute />}
+					/>
+				</Routes>
+			</MemoryRouter>
 		);
 	}
 

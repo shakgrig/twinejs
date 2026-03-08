@@ -4,6 +4,46 @@ import {Passage, StorySearchFlags, Story} from './stories.types';
 import {createRegExp} from '../../util/regexp';
 import {parseLinks} from '../../util/parse-links';
 
+interface PassageConnectionGroup {
+	broken: Set<Passage>;
+	connections: Map<Passage, Set<Passage>>;
+	self: Set<Passage>;
+}
+
+interface PassageConnectionResult {
+	draggable: PassageConnectionGroup;
+	fixed: PassageConnectionGroup;
+}
+
+function addPassageConnection(
+	result: PassageConnectionResult,
+	passage: Passage,
+	targetName: string,
+	passageMap: Map<string, Passage>
+) {
+	if (targetName === passage.name) {
+		(passage.selected ? result.draggable : result.fixed).self.add(passage);
+		return;
+	}
+
+	const targetPassage = passageMap.get(targetName);
+
+	if (!targetPassage) {
+		(passage.selected ? result.draggable : result.fixed).broken.add(passage);
+		return;
+	}
+
+	const target =
+		passage.selected || targetPassage.selected ? result.draggable : result.fixed;
+	const connections = target.connections.get(passage);
+
+	if (connections) {
+		connections.add(targetPassage);
+	} else {
+		target.connections.set(passage, new Set([targetPassage]));
+	}
+}
+
 export function passageWithId(
 	stories: Story[],
 	storyId: string,
@@ -49,7 +89,7 @@ export function passageConnections(
 ) {
 	const parser = connectionParser ?? ((text: string) => parseLinks(text, true));
 	const passageMap = new Map(passages.map(p => [p.name, p]));
-	const result = {
+	const result: PassageConnectionResult = {
 		draggable: {
 			broken: new Set<Passage>(),
 			connections: new Map<Passage, Set<Passage>>(),
@@ -63,30 +103,9 @@ export function passageConnections(
 	};
 
 	passages.forEach(passage =>
-		parser(passage.text).forEach(targetName => {
-			if (targetName === passage.name) {
-				(passage.selected ? result.draggable : result.fixed).self.add(passage);
-			} else {
-				const targetPassage = passageMap.get(targetName);
-
-				if (targetPassage) {
-					const target =
-						passage.selected || targetPassage.selected
-							? result.draggable
-							: result.fixed;
-
-					if (target.connections.has(passage)) {
-						target.connections.get(passage)!.add(targetPassage);
-					} else {
-						target.connections.set(passage, new Set([targetPassage]));
-					}
-				} else {
-					(passage.selected ? result.draggable : result.fixed).broken.add(
-						passage
-					);
-				}
-			}
-		})
+		parser(passage.text).forEach(targetName =>
+			addPassageConnection(result, passage, targetName, passageMap)
+		)
 	);
 
 	return result;
@@ -133,7 +152,7 @@ export function passagesMatchingSearch(
 
 	try {
 		matcher = createRegExp(search, {matchCase, useRegexes});
-	} catch (error) {
+	} catch {
 		// The regexp was malformed. Take no action.
 		return [];
 	}
@@ -153,17 +172,17 @@ export function passagesMatchingSearch(
 export function storyPassageTags(story: Story) {
 	return Array.from(
 		story.passages.reduce((result, passage) => {
-			passage.tags && passage.tags.forEach(tag => result.add(tag));
+			passage.tags?.forEach(tag => result.add(tag));
 			return result;
 		}, new Set<string>())
-	).sort();
+	).sort((a, b) => a.localeCompare(b));
 }
 
 export function storyStats(story: Story) {
 	const links = story.passages.reduce<string[]>(
 		(links, passage) => [
 			...links,
-			...parseLinks(passage.text).filter(link => links.indexOf(link) === -1)
+			...parseLinks(passage.text).filter(link => !links.includes(link))
 		],
 		[]
 	);
@@ -190,10 +209,10 @@ export function storyStats(story: Story) {
 export function storyTags(stories: Story[]) {
 	return Array.from(
 		stories.reduce((result, story) => {
-			story.tags && story.tags.forEach(tag => result.add(tag));
+			story.tags?.forEach(tag => result.add(tag));
 			return result;
 		}, new Set<string>())
-	).sort();
+	).sort((a, b) => a.localeCompare(b));
 }
 
 export function storyWithId(stories: Story[], storyId: string) {

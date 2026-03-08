@@ -1,7 +1,7 @@
-import {IconAward, IconBug, IconFileCode, IconSettings} from '@tabler/icons';
+import {IconAward, IconBug, IconFileCode, IconSettings} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useLocation} from 'react-router';
 import {ButtonBar} from '../components/container/button-bar';
 import {IconButton} from '../components/control/icon-button';
 import {AboutTwineDialog, AppPrefsDialog, useDialogsContext} from '../dialogs';
@@ -9,7 +9,7 @@ import {StoryFormatsDialog} from '../dialogs/story-formats/story-formats';
 
 export const AppActions: React.FC = () => {
 	const {dispatch} = useDialogsContext();
-	const history = useHistory();
+	const location = useLocation();
 	const {t} = useTranslation();
 
 	return (
@@ -20,7 +20,7 @@ export const AppActions: React.FC = () => {
 				onClick={() => dispatch({type: 'addDialog', component: AppPrefsDialog})}
 			/>
 			<IconButton
-				disabled={history.location.pathname === '/story-formats'}
+				disabled={location.pathname === '/story-formats'}
 				icon={<IconFileCode />}
 				label={t('routeActions.app.storyFormats')}
 				onClick={() =>

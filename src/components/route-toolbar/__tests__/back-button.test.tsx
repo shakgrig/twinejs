@@ -2,17 +2,16 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {createMemoryHistory, MemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Router} from 'react-router-dom';
+import {Router} from 'react-router';
 import {BackButton} from '../back-button';
 
 describe('<BackButton>', () => {
 	function renderComponent(history?: MemoryHistory) {
+		const resolvedHistory =
+			history ?? createMemoryHistory({initialEntries: ['/somewhere']});
+
 		return render(
-			<Router
-				history={
-					history ?? createMemoryHistory({initialEntries: ['/somewhere']})
-				}
-			>
+			<Router location={resolvedHistory.location} navigator={resolvedHistory}>
 				<BackButton />
 			</Router>
 		);

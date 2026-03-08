@@ -1,5 +1,5 @@
 import {ModeFactory} from 'codemirror';
-import {Thunk} from 'react-hook-thunk-reducer';
+import {Thunk, ThunkDispatch} from '../thunk.types';
 
 interface BaseStoryFormat {
 	id: string;
@@ -103,8 +103,15 @@ export type StoryFormatsAction =
 	| {type: 'delete'; id: string}
 	| {type: 'update'; id: string; props: Partial<StoryFormat>};
 
-export type StoryFormatsDispatch = React.Dispatch<
-	StoryFormatsAction | Thunk<StoryFormatsState, StoryFormatsAction>
+export type StoryFormatsThunk<R = unknown> = Thunk<
+	StoryFormatsState,
+	StoryFormatsAction,
+	R
+>;
+
+export type StoryFormatsDispatch = ThunkDispatch<
+	StoryFormatsState,
+	StoryFormatsAction
 >;
 
 export interface StoryFormatsContextProps {

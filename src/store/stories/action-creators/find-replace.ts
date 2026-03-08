@@ -1,10 +1,8 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {createRegExp, escapeRegExpReplace} from '../../../util/regexp';
 import {updatePassage} from './update-passage';
 import {
 	Passage,
-	StoriesAction,
-	StoriesState,
+	StoriesThunk,
 	Story,
 	StorySearchFlags
 } from '../stories.types';
@@ -77,7 +75,7 @@ export function replaceInPassage(
 	searchFor: string,
 	replaceWith: string,
 	flags: StorySearchFlags
-): Thunk<StoriesState, StoriesAction> {
+): StoriesThunk {
 	return (dispatch, getState) => {
 		if (searchFor === '') {
 			throw new Error("Can't replace an empty string");
@@ -115,7 +113,7 @@ export function replaceInStory(
 	searchFor: string,
 	replaceWith: string,
 	flags: StorySearchFlags
-): Thunk<StoriesState, StoriesAction> {
+): StoriesThunk {
 	return (dispatch, getState) => {
 		if (searchFor === '') {
 			throw new Error("Can't replace an empty string");

@@ -2,8 +2,7 @@ import {fireEvent, render, screen} from '@testing-library/react';
 import {createMemoryHistory, MemoryHistory} from 'history';
 import {axe} from 'jest-axe';
 import * as React from 'react';
-import {Helmet} from 'react-helmet';
-import {Router} from 'react-router-dom';
+import {Router} from 'react-router';
 import {PrefsState} from '../../../store/prefs';
 import {PrefInspector, FakeStateProvider} from '../../../test-util';
 import {WelcomeRoute} from '../welcome-route';
@@ -13,8 +12,13 @@ describe('<WelcomeRoute>', () => {
 		history?: MemoryHistory,
 		prefs?: Partial<PrefsState>
 	) {
+		const resolvedHistory = history ?? createMemoryHistory();
+
 		return render(
-			<Router history={history ?? createMemoryHistory()}>
+			<Router
+				location={resolvedHistory.location}
+				navigator={resolvedHistory}
+			>
 				<FakeStateProvider prefs={prefs}>
 					<WelcomeRoute />
 					<PrefInspector name="welcomeSeen" />
@@ -25,7 +29,7 @@ describe('<WelcomeRoute>', () => {
 
 	it('sets the document title', () => {
 		renderComponent();
-		expect(Helmet.peek().title).toBe('routes.welcome.greetingTitle');
+		expect(document.title).toBe('routes.welcome.greetingTitle');
 	});
 
 	it('sends users to the / route and records that the route has been seen when the user skips the onboarding', () => {
@@ -49,8 +53,11 @@ describe('<WelcomeRoute>', () => {
 
 		while (!screen.queryByText('routes.welcome.gotoStoryList')) {
 			const nexts = screen.getAllByText('common.next');
+			const nextButton = nexts.at(-1);
 
-			fireEvent.click(nexts[nexts.length - 1]);
+			if (nextButton) {
+				fireEvent.click(nextButton);
+			}
 		}
 
 		fireEvent.click(screen.getByText('routes.welcome.gotoStoryList'));

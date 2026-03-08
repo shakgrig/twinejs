@@ -64,7 +64,7 @@ describe('<TagFilterButton>', () => {
 		fireEvent.click(screen.getByRole('checkbox', {name: 'mock-tag-1'}));
 		expect(
 			JSON.parse(
-				screen.getByTestId('pref-inspector-storyListTagFilter').textContent!
+				screen.getByTestId('pref-inspector-storyListTagFilter').textContent
 			)
 		).toEqual(['existing-tag', 'mock-tag-1']);
 	});
@@ -77,7 +77,7 @@ describe('<TagFilterButton>', () => {
 		fireEvent.click(screen.getByRole('checkbox', {name: 'existing-tag'}));
 		expect(
 			JSON.parse(
-				screen.getByTestId('pref-inspector-storyListTagFilter').textContent!
+				screen.getByTestId('pref-inspector-storyListTagFilter').textContent
 			)
 		).toEqual([]);
 	});
@@ -93,7 +93,7 @@ describe('<TagFilterButton>', () => {
 		);
 		expect(
 			JSON.parse(
-				screen.getByTestId('pref-inspector-storyListTagFilter').textContent!
+				screen.getByTestId('pref-inspector-storyListTagFilter').textContent
 			)
 		).toEqual(['existing-tag', 'existing-tag-2']);
 		fireEvent.click(
@@ -103,7 +103,7 @@ describe('<TagFilterButton>', () => {
 		);
 		expect(
 			JSON.parse(
-				screen.getByTestId('pref-inspector-storyListTagFilter').textContent!
+				screen.getByTestId('pref-inspector-storyListTagFilter').textContent
 			)
 		).toEqual([]);
 	});

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconArrowBack, IconArrowForward} from '@tabler/icons';
+import {IconArrowBack, IconArrowForward} from '@tabler/icons-react';
 import {useUndoableStoriesContext} from '../../../store/undoable-stories';
 import {IconButton} from '../../../components/control/icon-button';
 

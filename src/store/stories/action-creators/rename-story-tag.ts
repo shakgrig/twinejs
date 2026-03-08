@@ -1,12 +1,11 @@
-import {Thunk} from 'react-hook-thunk-reducer';
-import {StoriesAction, StoriesState, Story} from '../stories.types';
+import {StoriesThunk, Story} from '../stories.types';
 import {isValidTagName} from '../../../util/tag';
 
 export function renameStoryTag(
 	stories: Story[],
 	oldName: string,
 	newName: string
-): Thunk<StoriesState, StoriesAction> {
+): StoriesThunk {
 	if (!isValidTagName(newName)) {
 		throw new Error(`"${newName}" is not a valid tag name.`);
 	}

@@ -1,11 +1,8 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {Rect, rectsIntersect} from '../../../util/geometry';
 import {
 	Passage,
-	StoriesState,
+	StoriesThunk,
 	Story,
-	UpdatePassageAction,
-	UpdatePassagesAction
 } from '../stories.types';
 
 /**
@@ -13,7 +10,7 @@ import {
  */
 export function deselectAllPassages(
 	story: Story
-): Thunk<StoriesState, UpdatePassagesAction> {
+): StoriesThunk {
 	return dispatch => {
 		const passageUpdates: Record<string, Partial<Passage>> = {};
 
@@ -39,7 +36,7 @@ export function deselectAllPassages(
 export function deselectPassage(
 	story: Story,
 	passage: Passage
-): Thunk<StoriesState, UpdatePassageAction> {
+): StoriesThunk {
 	if (passage.story !== story.id) {
 		throw new Error('This passage does not belong to this story');
 	}
@@ -61,7 +58,7 @@ export function deselectPassage(
  */
 export function selectAllPassages(
 	story: Story
-): Thunk<StoriesState, UpdatePassagesAction> {
+): StoriesThunk {
 	return dispatch => {
 		const passageUpdates: Record<string, Partial<Passage>> = {};
 
@@ -88,7 +85,7 @@ export function selectPassage(
 	story: Story,
 	passage: Passage,
 	exclusive: boolean
-): Thunk<StoriesState, UpdatePassagesAction> {
+): StoriesThunk {
 	if (passage.story !== story.id) {
 		throw new Error('This passage does not belong to this story');
 	}
@@ -118,12 +115,12 @@ export function selectPassagesInRect(
 	story: Story,
 	rect: Rect,
 	ignoreIds: string[] = []
-): Thunk<StoriesState, UpdatePassagesAction> {
+): StoriesThunk {
 	return dispatch => {
 		const passageUpdates: Record<string, Partial<Passage>> = {};
 
 		story.passages.forEach(passage => {
-			if (ignoreIds.find(r => r === passage.id)) {
+			if (ignoreIds.includes(passage.id)) {
 				// We are ignoring this passage, e.g. this is an additive selection and it
 				// was already selected.
 				return;

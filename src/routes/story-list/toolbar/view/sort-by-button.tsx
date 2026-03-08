@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconArrowsSort} from '@tabler/icons';
+import {IconArrowsSort} from '@tabler/icons-react';
 import {MenuButton} from '../../../../components/control/menu-button';
 import {setPref, usePrefsContext} from '../../../../store/prefs';
 

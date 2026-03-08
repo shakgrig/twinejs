@@ -1,7 +1,6 @@
 import escapeRegExp from 'lodash/escapeRegExp';
-import {Thunk} from 'react-hook-thunk-reducer';
 import {storyWithId} from '../getters';
-import {Passage, StoriesAction, StoriesState, Story} from '../stories.types';
+import {Passage, StoriesThunk, Story} from '../stories.types';
 import {createNewlyLinkedPassages} from './create-newly-linked-passages';
 import {deleteOrphanedPassages} from './delete-orphaned-passages';
 
@@ -17,7 +16,7 @@ export function updatePassage(
 	passage: Passage,
 	props: Partial<Passage>,
 	options: UpdatePassageOptions = {}
-): Thunk<StoriesState, StoriesAction> {
+): StoriesThunk {
 	if (!story.passages.some(p => p.id === passage.id)) {
 		throw new Error('This passage does not belong to this story.');
 	}
@@ -66,18 +65,18 @@ export function updatePassage(
 			// second argument to replace(). This is a little mindbending, but the
 			// purpose of this is to replace $ with $$.
 
-			const newNameEscaped = props.name.replace(/\$/g, '$$$$');
+			const newNameEscaped = props.name.replaceAll('$', '$$$$');
 
 			const simpleLinkRegexp = new RegExp(
-				'\\[\\[' + oldNameEscaped + '(\\]\\[.*?)?\\]\\]',
+				String.raw`\[\[` + oldNameEscaped + String.raw`(\]\[.*?)?\]\]`,
 				'g'
 			);
 			const compoundLinkRegexp = new RegExp(
-				'\\[\\[(.*?)(\\||->)' + oldNameEscaped + '(\\]\\[.*?)?\\]\\]',
+				String.raw`\[\[(.*?)(\||->)` + oldNameEscaped + String.raw`(\]\[.*?)?\]\]`,
 				'g'
 			);
 			const reverseLinkRegexp = new RegExp(
-				'\\[\\[' + oldNameEscaped + '(<-.*?)(\\]\\[.*?)?\\]\\]',
+				String.raw`\[\[` + oldNameEscaped + String.raw`(<-.*?)(\]\[.*?)?\]\]`,
 				'g'
 			);
 

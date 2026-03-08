@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconTag} from '@tabler/icons';
+import {IconTag} from '@tabler/icons-react';
 import {MenuButton} from '../../../../components/control/menu-button';
 import {usePrefsContext} from '../../../../store/prefs';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams} from 'react-router';
 import {MainContent} from '../../components/container/main-content';
 import {DocumentTitle} from '../../components/document-title/document-title';
 import {DialogsContextProvider} from '../../dialogs';
@@ -19,7 +19,7 @@ import {useZoomTransition} from './use-zoom-transition';
 import './story-edit-route.css';
 
 export const InnerStoryEditRoute: React.FC = () => {
-	const {storyId} = useParams<{storyId: string}>();
+	const {storyId = ''} = useParams<{storyId: string}>();
 	const {stories} = useUndoableStoriesContext();
 	const story = storyWithId(stories, storyId);
 	const [fuzzyFinderOpen, setFuzzyFinderOpen] = React.useState(false);

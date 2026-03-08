@@ -26,7 +26,7 @@ UndoableStoriesContext.displayName = 'UndoableStories';
 export const useUndoableStoriesContext = () =>
 	React.useContext(UndoableStoriesContext);
 
-export const UndoableStoriesContextProvider: React.FC = props => {
+export const UndoableStoriesContextProvider: React.FC<React.PropsWithChildren> = props => {
 	const {dispatch: storiesDispatch, stories} = useStoriesContext();
 	const [state, dispatch] = React.useReducer(reducer, {
 		changes: [],
@@ -76,17 +76,27 @@ export const UndoableStoriesContextProvider: React.FC = props => {
 		}
 	}
 
+	const contextValue = React.useMemo(
+		() => ({
+			dispatch: dispatchAndRecordStoryAction,
+			redo,
+			redoLabel,
+			stories,
+			undo,
+			undoLabel
+		}),
+		[
+			dispatchAndRecordStoryAction,
+			redo,
+			redoLabel,
+			stories,
+			undo,
+			undoLabel
+		]
+	);
+
 	return (
-		<UndoableStoriesContext.Provider
-			value={{
-				dispatch: dispatchAndRecordStoryAction,
-				redo,
-				redoLabel,
-				stories,
-				undo,
-				undoLabel
-			}}
-		>
+		<UndoableStoriesContext.Provider value={contextValue}>
 			{props.children}
 		</UndoableStoriesContext.Provider>
 	);

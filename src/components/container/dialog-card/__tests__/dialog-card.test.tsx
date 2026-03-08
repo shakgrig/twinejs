@@ -109,7 +109,6 @@ describe('<DialogCard>', () => {
 		expect(onChangeCollapsed.mock.calls).toEqual([[false]]);
 	});
 
-
 	it('calls the onClose prop when the close button is clicked', () => {
 		const onClose = jest.fn();
 
@@ -119,17 +118,15 @@ describe('<DialogCard>', () => {
 		expect(onClose).toHaveBeenCalledTimes(1);
 	});
 
-	it('calls the onClose prop when the Escape key is pressed', () => {
+	it('calls the onClose prop when the dialog cancel event occurs', () => {
 		const onClose = jest.fn();
 
 		renderComponent({onClose});
 		expect(onClose).not.toHaveBeenCalled();
-		fireEvent.keyDown(screen.getByTestId('dialog-card-children'), {
-			key: 'Escape',
-			code: 'Escape',
-			keyCode: 27,
-			charCode: 27
-		});
+		fireEvent(
+			screen.getByRole('dialog', {name: 'mock-header-label'}),
+			new Event('cancel', {cancelable: true})
+		);
 		expect(onClose).toHaveBeenCalledTimes(1);
 	});
 
@@ -149,7 +146,7 @@ describe('<DialogCard>', () => {
 		jest.spyOn(console, 'error').mockReturnValue();
 
 		const BadComponent = () => {
-			throw new Error();
+			throw new Error('Mock crash');
 		};
 
 		render(

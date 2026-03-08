@@ -25,8 +25,8 @@ const TestDeletePassagesButton: React.FC<
 				story={stories[0]}
 				{...props}
 			/>
-			<input aria-hidden type="text" />
-			<textarea aria-hidden></textarea>
+			<input hidden type="text" />
+			<textarea hidden></textarea>
 		</>
 	);
 };

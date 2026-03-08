@@ -1,9 +1,8 @@
-import {Thunk} from 'react-hook-thunk-reducer';
-import {StoriesAction, StoriesState} from '../stories';
+import {StoriesAction, StoriesState, StoriesThunk} from '../stories';
 
 export type StoriesActionOrThunk =
 	| StoriesAction
-	| Thunk<StoriesState, StoriesAction>;
+	| StoriesThunk;
 
 export type UndoableStoriesAction =
 	| {

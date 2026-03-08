@@ -25,8 +25,8 @@ export const DialogStackExpander: React.FC<
 			}
 		}
 
-		window.addEventListener('touchstart', listener);
-		return () => window.removeEventListener('touchstart', listener);
+		globalThis.addEventListener('touchstart', listener);
+		return () => globalThis.removeEventListener('touchstart', listener);
 	}, [expanded, onChangeExpanded]);
 
 	// If the stack is expanded and was opened via touch, we don't need to render

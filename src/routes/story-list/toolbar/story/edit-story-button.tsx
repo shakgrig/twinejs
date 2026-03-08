@@ -1,7 +1,7 @@
-import {IconEdit} from '@tabler/icons';
+import {IconEdit} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useHistory} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 import {IconButton} from '../../../../components/control/icon-button';
 import {Story} from '../../../../store/stories';
 
@@ -10,7 +10,7 @@ export interface EditStoryButtonProps {
 }
 
 export const EditStoryButton: React.FC<EditStoryButtonProps> = ({story}) => {
-	const history = useHistory();
+	const navigate = useNavigate();
 	const {t} = useTranslation();
 
 	return (
@@ -18,7 +18,7 @@ export const EditStoryButton: React.FC<EditStoryButtonProps> = ({story}) => {
 			disabled={!story}
 			icon={<IconEdit />}
 			label={t('common.edit')}
-			onClick={() => history.push(`/stories/${story?.id}`)}
+			onClick={() => navigate(`/stories/${story?.id}`)}
 		/>
 	);
 };

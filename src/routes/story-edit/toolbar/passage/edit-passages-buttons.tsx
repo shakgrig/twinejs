@@ -1,4 +1,4 @@
-import {IconEdit} from '@tabler/icons';
+import {IconEdit} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {IconButton} from '../../../../components/control/icon-button';

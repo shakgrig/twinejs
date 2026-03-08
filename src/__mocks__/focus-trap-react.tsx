@@ -1,6 +1,10 @@
 import * as React from 'react';
 
-function FocusTrap({children}: {children: React.ReactChildren}) {
+interface FocusTrapProps {
+	readonly children: React.ReactNode;
+}
+
+export function FocusTrap({children}: FocusTrapProps) {
 	return <>{children}</>;
 }
 

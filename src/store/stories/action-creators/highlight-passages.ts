@@ -1,15 +1,13 @@
-import {Thunk} from 'react-hook-thunk-reducer';
 import {
 	Passage,
-	StoriesState,
+	StoriesThunk,
 	Story,
-	UpdatePassagesAction
 } from '../stories.types';
 
 export function highlightPassages(
 	story: Story,
 	passageIds: string[]
-): Thunk<StoriesState, UpdatePassagesAction> {
+): StoriesThunk {
 	return dispatch => {
 		const passageUpdates: Record<string, Partial<Passage>> = {};
 
