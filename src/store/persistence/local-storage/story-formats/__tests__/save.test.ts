@@ -2,25 +2,23 @@ import {save} from '../save';
 import {fakeLoadedStoryFormat} from '../../../../../test-util';
 
 describe('story formats local storage save', () => {
-	beforeEach(() => window.localStorage.clear());
-	afterAll(() => window.localStorage.clear());
+	beforeEach(() => globalThis.localStorage.clear());
+	afterAll(() => globalThis.localStorage.clear());
 
 	it('saves formats to local storage', () => {
 		const formats = [fakeLoadedStoryFormat(), fakeLoadedStoryFormat()];
 
 		save(formats);
 
-		const ids = window.localStorage.getItem('twine-storyformats')!.split(',');
+		const ids = globalThis.localStorage.getItem('twine-storyformats')!.split(',');
 		const format1 = JSON.parse(
-			window.localStorage.getItem(`twine-storyformats-${ids[0]}`)!
+			globalThis.localStorage.getItem(`twine-storyformats-${ids[0]}`)!
 		);
 		const format2 = JSON.parse(
-			window.localStorage.getItem(`twine-storyformats-${ids[1]}`)!
+			globalThis.localStorage.getItem(`twine-storyformats-${ids[1]}`)!
 		);
 
 		// This will change IDs on us--we can't do a simple compare.
-
-		/* eslint-disable jest/no-conditional-expect */
 
 		if (format1.name === formats[0].name) {
 			expect(format1).toEqual(
@@ -57,10 +55,9 @@ describe('story formats local storage save', () => {
 				})
 			);
 		} else {
-			throw new Error('First story format not present in window.localStorage.');
+			throw new Error('First story format not present in globalThis.localStorage.');
 		}
 
-		/* eslint-enable jest/no-conditional-expect */
 		expect.assertions(2);
 	});
 });

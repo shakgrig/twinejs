@@ -1,16 +1,20 @@
 import {PrefsState} from '../../../prefs';
 
 export async function load(): Promise<Partial<PrefsState>> {
-	const serialized = window.localStorage.getItem('twine-prefs');
+	const serialized = globalThis.localStorage.getItem('twine-prefs');
 	const result: Partial<PrefsState> = {};
 
 	if (!serialized) {
 		return {};
 	}
 
-	serialized.split(',').forEach(id => {
+	serialized
+		.split(',')
+		.map(id => id.trim())
+		.filter(Boolean)
+		.forEach(id => {
 		try {
-			const serializedPref = window.localStorage.getItem(`twine-prefs-${id}`);
+			const serializedPref = globalThis.localStorage.getItem(`twine-prefs-${id}`);
 
 			if (!serializedPref) {
 				console.warn(`No preference stored at twine-prefs-${id}`);
@@ -23,11 +27,11 @@ export async function load(): Promise<Partial<PrefsState>> {
 		} catch (e) {
 			console.warn(
 				`Preference ${id} had corrupt serialized value, skipping`,
-				window.localStorage.getItem(`twine-prefs-${id}`),
+				globalThis.localStorage.getItem(`twine-prefs-${id}`),
 				e
 			);
 		}
-	});
+		});
 
 	return result;
 }

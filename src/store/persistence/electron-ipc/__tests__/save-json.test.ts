@@ -1,22 +1,25 @@
-import {saveJson} from '../save-json';
-import {TwineElectronWindow} from '../../../../electron/shared';
+import {saveJson as saveJsonToDisk} from '../save-json';
 
 describe('saveJson()', () => {
-	afterEach(() => delete (window as TwineElectronWindow).twineElectron);
+	afterEach(() => delete (globalThis as any).twineElectron);
 
 	it('calls saveJson on the twineElectron global', () => {
-		const saveJson = jest.fn();
+		const saveJsonMock = jest.fn();
 		const mockObject = {mock: true};
 
-		(window as any).twineElectron = {
-			saveJson
-		};
+		Object.defineProperty(globalThis, 'twineElectron', {
+			configurable: true,
+			value: {
+				saveJson: saveJsonMock
+			},
+			writable: true
+		});
 
-		saveJson('test.json', mockObject);
-		expect(saveJson.mock.calls).toEqual([['test.json', mockObject]]);
+		saveJsonToDisk('test.json', mockObject);
+		expect(saveJsonMock.mock.calls).toEqual([['test.json', mockObject]]);
 	});
 
 	it('throws an error if twineElectron.saveJson is undefined', () => {
-		expect(() => saveJson('test.json', {})).toThrow();
+		expect(() => saveJsonToDisk('test.json', {})).toThrow();
 	});
 });

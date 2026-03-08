@@ -50,12 +50,12 @@ describe('repairPassage', () => {
 	});
 
 	it('sets a default on a numeric passage property if it is not a finite number', () => {
-		expect(repairPassage({...passage, left: NaN}, story)).toEqual({
+		expect(repairPassage({...passage, left: Number.NaN}, story)).toEqual({
 			...passage,
 			id: expect.any(String),
 			left: 0
 		});
-		expect(repairPassage({...passage, top: NaN}, story)).toEqual({
+		expect(repairPassage({...passage, top: Number.NaN}, story)).toEqual({
 			...passage,
 			id: expect.any(String),
 			top: 0

@@ -73,8 +73,8 @@ describe('updatePassage action creator', () => {
 
 		it('handles passage name changes where the original name has regular expression characters correctly', () => {
 			story = fakeStory(3);
-			story.passages[0].name = '.*?\\1$1';
-			story.passages[1].text = '[[.*?\\1$1]]';
+			story.passages[0].name = String.raw`.*?\1$1`;
+			story.passages[1].text = String.raw`[[.*?\1$1]]`;
 			story.passages[2].text = 'unlinked';
 			updatePassage(
 				story,
@@ -109,14 +109,14 @@ describe('updatePassage action creator', () => {
 			updatePassage(
 				story,
 				story.passages[0],
-				{name: '.*?\\1$1'},
+				{name: String.raw`.*?\1$1`},
 				{dontUpdateOthers: true}
 			)(dispatch, getState);
 			expect(dispatchMock.mock.calls).toEqual([
 				[
 					{
 						passageId: story.passages[0].id,
-						props: {name: '.*?\\1$1'},
+						props: {name: String.raw`.*?\1$1`},
 						storyId: story.id,
 						type: 'updatePassage'
 					}
@@ -124,7 +124,7 @@ describe('updatePassage action creator', () => {
 				[
 					{
 						passageId: story.passages[1].id,
-						props: {text: '[[.*?\\1$1]]'},
+						props: {text: String.raw`[[.*?\1$1]]`},
 						storyId: story.id,
 						type: 'updatePassage'
 					}
@@ -134,19 +134,19 @@ describe('updatePassage action creator', () => {
 
 		it('handles passage name changes where both old and new name has regular expression characters correctly', () => {
 			story = fakeStory(3);
-			story.passages[0].name = 'old .*?\\1$1';
-			story.passages[1].text = '[[old .*?\\1$1]]';
+			story.passages[0].name = String.raw`old .*?\1$1`;
+			story.passages[1].text = String.raw`[[old .*?\1$1]]`;
 			updatePassage(
 				story,
 				story.passages[0],
-				{name: 'new .*?\\1$1'},
+				{name: String.raw`new .*?\1$1`},
 				{dontUpdateOthers: true}
 			)(dispatch, getState);
 			expect(dispatchMock.mock.calls).toEqual([
 				[
 					{
 						passageId: story.passages[0].id,
-						props: {name: 'new .*?\\1$1'},
+						props: {name: String.raw`new .*?\1$1`},
 						storyId: story.id,
 						type: 'updatePassage'
 					}
@@ -154,7 +154,7 @@ describe('updatePassage action creator', () => {
 				[
 					{
 						passageId: story.passages[1].id,
-						props: {text: '[[new .*?\\1$1]]'},
+						props: {text: String.raw`[[new .*?\1$1]]`},
 						storyId: story.id,
 						type: 'updatePassage'
 					}
@@ -198,7 +198,7 @@ describe('updatePassage action creator', () => {
 				dispatch,
 				getState
 			);
-			expect(deleteOrphanedPassagesMock).not.toBeCalled();
+			expect(deleteOrphanedPassagesMock).not.toHaveBeenCalled();
 		});
 
 		it("doesn't call deleteOrphanedPassages if the dontUpdateOthers option is true", () => {
@@ -208,7 +208,7 @@ describe('updatePassage action creator', () => {
 				{text: 'new text'},
 				{dontUpdateOthers: true}
 			)(dispatch, getState);
-			expect(deleteOrphanedPassagesMock).not.toBeCalled();
+			expect(deleteOrphanedPassagesMock).not.toHaveBeenCalled();
 		});
 
 		it('deletes orphans before creating new passages', () => {
@@ -228,7 +228,7 @@ describe('updatePassage action creator', () => {
 				dispatch,
 				getState
 			);
-			expect(getState).toBeCalledTimes(1);
+			expect(getState).toHaveBeenCalledTimes(1);
 			expect(createNewlyLinkedPassagesMock.mock.calls).toEqual([
 				[story, story.passages[0], 'new text', oldText]
 			]);
@@ -239,7 +239,7 @@ describe('updatePassage action creator', () => {
 				dispatch,
 				getState
 			);
-			expect(createNewlyLinkedPassagesMock).not.toBeCalled();
+			expect(createNewlyLinkedPassagesMock).not.toHaveBeenCalled();
 		});
 
 		it("doesn't call createNewlyLinkedPassages if the dontUpdateOthers option is true", () => {
@@ -249,7 +249,7 @@ describe('updatePassage action creator', () => {
 				{text: 'new text'},
 				{dontUpdateOthers: true}
 			)(dispatch, getState);
-			expect(createNewlyLinkedPassagesMock).not.toBeCalled();
+			expect(createNewlyLinkedPassagesMock).not.toHaveBeenCalled();
 		});
 	});
 });

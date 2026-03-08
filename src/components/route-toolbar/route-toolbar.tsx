@@ -1,4 +1,4 @@
-import {IconHelp} from '@tabler/icons';
+import {IconHelp} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Tab, TabList, TabPanel, Tabs} from 'react-tabs';

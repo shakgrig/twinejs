@@ -1,7 +1,7 @@
 import {TwineElectronWindow} from '../../../electron/shared';
 
 export function saveJson(filename: string, data: any) {
-	const {twineElectron} = window as TwineElectronWindow;
+	const {twineElectron} = globalThis as unknown as TwineElectronWindow;
 
 	if (!twineElectron) {
 		throw new Error('Electron bridge is not present on window.');

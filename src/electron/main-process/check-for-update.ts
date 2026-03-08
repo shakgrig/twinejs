@@ -27,7 +27,7 @@ export async function checkForUpdate() {
 	try {
 		const {url, version} = (await (
 			await fetch(checkUrl)
-		).json()) as unknown as VersionResponse;
+		).json()) as VersionResponse;
 
 		console.log(`Received version ${version}, url ${url}`);
 

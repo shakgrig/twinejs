@@ -10,7 +10,7 @@ describe('<StorageQuota>', () => {
 	const isElectronRendererMock = isElectronRenderer as jest.Mock;
 
 	beforeEach(() => {
-		(window.navigator as any).storage = {
+		(globalThis.navigator as any).storage = {
 			estimate: jest.fn(() => ({
 				quota: 100,
 				usage: 0
@@ -19,7 +19,7 @@ describe('<StorageQuota>', () => {
 	});
 
 	afterAll(() => {
-		delete (window.navigator as any).storage;
+		delete (globalThis.navigator as any).storage;
 	});
 
 	function renderComponent(props?: Partial<StorageQuotaProps>) {
@@ -33,10 +33,10 @@ describe('<StorageQuota>', () => {
 	});
 
 	it('does not display if navigator.storage or navigator.storage.estimate is not available', async () => {
-		delete (window.navigator as any).storage.estimate;
+		delete (globalThis.navigator as any).storage.estimate;
 		renderComponent();
 		expect(document.body.textContent).toBe('');
-		delete (window.navigator as any).storage;
+		delete (globalThis.navigator as any).storage;
 		cleanup();
 		renderComponent();
 		expect(document.body.textContent).toBe('');

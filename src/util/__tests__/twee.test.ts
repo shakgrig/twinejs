@@ -91,7 +91,7 @@ describe('passageFromTwee()', () => {
 	});
 
 	it('converts a passage with an escaped name properly', () => {
-		const passage = fakePassage({name: '\\oops[{'});
+		const passage = fakePassage({name: String.raw`\oops[{`});
 
 		expect(passageFromTwee(`:: \\oops\\[\\{\n${passage.text}`)).toEqual(
 			passageObject({
@@ -103,13 +103,13 @@ describe('passageFromTwee()', () => {
 	});
 
 	it('converts a passage with escaped leading spaces properly', () => {
-		expect(passageFromTwee(':: \\ leading space')).toEqual(
+		expect(passageFromTwee(String.raw`:: \ leading space`)).toEqual(
 			passageObject({name: ' leading space'})
 		);
 	});
 
 	it('converts a passage with trailing leading spaces properly', () => {
-		expect(passageFromTwee(':: trailing space\\ ')).toEqual(
+		expect(passageFromTwee(String.raw`:: trailing space\ `)).toEqual(
 			passageObject({name: 'trailing space '})
 		);
 	});
@@ -323,7 +323,7 @@ describe('passageToTwee()', () => {
 	it('handles a tag name with special characters properly', () => {
 		const passage = fakePassage({
 			name: 'mock-passage',
-			tags: ['[weird]', '{but-possible}', '\\slash']
+			tags: ['[weird]', '{but-possible}', String.raw`\slash`]
 		});
 
 		expect(passageToTwee(passage)).toBe(

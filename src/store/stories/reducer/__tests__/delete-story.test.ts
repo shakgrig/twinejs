@@ -19,7 +19,7 @@ describe('Story reducer deleteStory action handler', () => {
 	it('issues a warning and makes no changes if there is no story in state with the ID requested', () => {
 		const story = fakeStory();
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(deleteStory([story], story.id + 'wrong')).toEqual([story]);

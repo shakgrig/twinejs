@@ -89,7 +89,7 @@ describe('backupStoryDirectory()', () => {
 
 		it('uses unique names for backup directories', async () => {
 			await backupStoryDirectory();
-			await new Promise(resolve => window.setTimeout(resolve, 5));
+			await new Promise(resolve => globalThis.setTimeout(resolve, 5));
 			await backupStoryDirectory();
 			expect(copyMock.mock.calls[0][1]).not.toBe(copyMock.mock.calls[1][1]);
 		});
@@ -140,8 +140,8 @@ describe('chooseStoryDirectory()', () => {
 
 	it('does nothing if the user cancels out of the dialog', async () => {
 		await chooseStoryDirectoryPath();
-		expect(setAppPrefMock).not.toBeCalled();
-		expect(showRelaunchDialogMock).not.toBeCalled();
+		expect(setAppPrefMock).not.toHaveBeenCalled();
+		expect(showRelaunchDialogMock).not.toHaveBeenCalled();
 	});
 
 	describe('If the user chooses a directory', () => {
@@ -161,7 +161,7 @@ describe('chooseStoryDirectory()', () => {
 
 		it('shows the relaunch dialog', async () => {
 			await chooseStoryDirectoryPath();
-			expect(showRelaunchDialogMock).toBeCalledTimes(1);
+			expect(showRelaunchDialogMock).toHaveBeenCalledTimes(1);
 		});
 	});
 });
@@ -180,7 +180,7 @@ describe('createStoryDirectory()', () => {
 	});
 
 	it('rejects if mkdirp() rejects', async () => {
-		const error = new Error();
+		const error = new Error('Mock mkdirp failure');
 
 		mkdirpMock.mockRejectedValue(error);
 		await expect(createStoryDirectory).rejects.toBe(error);
@@ -223,13 +223,13 @@ describe('initStoryDirectoryPath()', () => {
 			// First attempt is the initial one; second is after the mkdirp call.
 
 			readdirMock.mockImplementationOnce(() => {
-				throw new Error();
+				throw new Error('Mock readdir failure before create');
 			});
 			await initStoryDirectory();
 			expect(getStoryDirectoryPath()).toBe(
 				'mock-story-library-folder-app-pref'
 			);
-			expect(mkdirpMock).toBeCalledTimes(1);
+			expect(mkdirpMock).toHaveBeenCalledTimes(1);
 		});
 
 		describe("When the app pref isn't readable nor can be created", () => {
@@ -238,7 +238,7 @@ describe('initStoryDirectoryPath()', () => {
 
 			beforeEach(() => {
 				readdirMock.mockImplementation(() => {
-					throw new Error();
+					throw new Error('Mock readdir failure after create');
 				});
 				showMessageBoxMock.mockResolvedValue({response: 0});
 			});
@@ -263,7 +263,7 @@ describe('initStoryDirectoryPath()', () => {
 			it('quits if the user chooses that option', async () => {
 				showMessageBoxMock.mockResolvedValue({response: 1});
 				await initStoryDirectory();
-				expect(quitMock).toBeCalledTimes(1);
+				expect(quitMock).toHaveBeenCalledTimes(1);
 			});
 
 			it('continues and returns the default path if the user chooses that option', async () => {
@@ -272,7 +272,7 @@ describe('initStoryDirectoryPath()', () => {
 				expect(getStoryDirectoryPath()).toBe(
 					'mock-electron-app-path-documents/common.appName/electron.storiesDirectoryName'
 				);
-				expect(quitMock).not.toBeCalled();
+				expect(quitMock).not.toHaveBeenCalled();
 			});
 		});
 	});
@@ -297,7 +297,7 @@ describe('revealStoryDirectoryPath()', () => {
 	});
 
 	it('rejects with an error if showing the story directory fails', async () => {
-		const error = new Error();
+		const error = new Error('Mock reveal failure');
 
 		openPathSpy.mockRejectedValue(error);
 		await expect(revealStoryDirectory).rejects.toBe(error);

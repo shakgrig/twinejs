@@ -19,7 +19,7 @@ export function hueString(value: string): number {
 	let result = 0;
 
 	for (let i = 0; i < value.length; i++) {
-		result += value.charCodeAt(i);
+		result += value.codePointAt(i) ?? 0;
 	}
 
 	return result % 360;

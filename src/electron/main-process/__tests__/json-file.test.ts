@@ -17,7 +17,7 @@ describe('loadJsonFile()', () => {
 	});
 
 	it('rejects if there is an error reading the file', async () => {
-		const mockError = new Error();
+		const mockError = new Error('Test error');
 
 		readJsonMock.mockRejectedValue(mockError);
 		await expect(loadJsonFile('test.json')).rejects.toBe(mockError);
@@ -38,7 +38,7 @@ describe('loadJsonFileSync()', () => {
 	});
 
 	it('throws an error if there is an error reading the file', async () => {
-		const mockError = new Error();
+		const mockError = new Error('Test error');
 
 		readJsonSyncMock.mockImplementation(() => {
 			throw mockError;
@@ -60,7 +60,7 @@ describe('saveJsonFile()', () => {
 	});
 
 	it('rejects if there is an error writing data', async () => {
-		const mockError = new Error();
+		const mockError = new Error('Test error');
 
 		writeJsonMock.mockRejectedValue(mockError);
 		await expect(saveJsonFile('test.json', {})).rejects.toBe(mockError);

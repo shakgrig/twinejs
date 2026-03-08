@@ -40,7 +40,7 @@ export function formatImageUrl(format: StoryFormat) {
 		return format.properties.image;
 	}
 
-	return format.url.replace(/\/[^/]*?$/, '/') + format.properties.image;
+	return format.url.replace(/\/[^/]*$/, '/') + format.properties.image;
 }
 
 export function formatWithId(formats: StoryFormat[], id: string) {

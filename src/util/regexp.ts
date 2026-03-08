@@ -22,5 +22,5 @@ export function escapeRegExpReplace(source: string) {
 	// This implementation is a little tricky in that it needs to escape the $s
 	// itself in the replacement.
 
-	return source.replace(/\$/g, '$$$$');
+	return source.replaceAll('$', '$$$$');
 }

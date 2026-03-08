@@ -1,6 +1,6 @@
 import {app, shell} from 'electron';
 import {mkdirp, readdir, remove, stat, writeFile} from 'fs-extra';
-import {join} from 'path';
+import {join} from 'node:path';
 import {i18n} from './locales';
 import {getAppPref} from './app-prefs';
 
@@ -29,17 +29,21 @@ export async function cleanScratchDirectory() {
 
 	// Coerce the app pref to an integer. If it was set via CLI argument, it may
 	// come in as a string.
-	const agePref =
-		getAppPref('scratchFileCleanupAge') !== undefined
-			? parseInt((getAppPref('scratchFileCleanupAge') as object).toString())
-			: NaN;
+	const agePrefValue = getAppPref('scratchFileCleanupAge');
+	let agePref = Number.NaN;
+
+	if (typeof agePrefValue === 'number') {
+		agePref = agePrefValue;
+	} else if (typeof agePrefValue === 'string') {
+		agePref = Number.parseInt(agePrefValue, 10);
+	}
 
 	// milliseconds -> seconds -> minutes -> hours -> days
-	const tooOld = 1000 * 60 * (isFinite(agePref) ? agePref : 60 * 24 * 3);
+	const tooOld = 1000 * 60 * (Number.isFinite(agePref) ? agePref : 60 * 24 * 3);
 	const now = Date.now();
 	const scratchFiles = (
 		await readdir(scratchDirectoryPath(), {withFileTypes: true})
-	).filter(file => !file.isDirectory() && /\.html$/.test(file.name));
+	).filter(file => !file.isDirectory() && file.name.endsWith('.html'));
 
 	return Promise.all(
 		scratchFiles.map(async file => {

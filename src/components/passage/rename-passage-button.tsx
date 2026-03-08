@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconWriting} from '@tabler/icons';
+import {IconWriting} from '@tabler/icons-react';
 import {PromptButton} from '../control/prompt-button';
 import {Passage, Story} from '../../store/stories';
 import {IconButton} from '../control/icon-button';

@@ -38,17 +38,16 @@ export const SelectableCard: React.FC<SelectableCardProps> = props => {
 	);
 
 	return (
-		<div
+		<button
+			type="button"
 			className={classNames('selectable-card', {selected})}
-			role="button"
 			aria-label={label}
 			aria-pressed={selected}
 			onClick={onClick}
 			onDoubleClick={onDoubleClick}
 			onKeyDown={onKeyDown}
-			tabIndex={0}
 		>
 			<Card {...other} />
-		</div>
+		</button>
 	);
 };

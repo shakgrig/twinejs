@@ -3,7 +3,7 @@ import {TwineElectronWindow} from '../../../../../electron/shared';
 import {fakeUnloadedStoryFormat} from '../../../../../test-util';
 
 describe('story formats Electron IPC load', () => {
-	const electronWindow = window as TwineElectronWindow;
+	const electronWindow = globalThis as unknown as TwineElectronWindow;
 
 	function mockLoadStoryFormats(data: any) {
 		Object.assign(electronWindow, {

@@ -85,28 +85,28 @@ describe('<StoryStylesheetDialog>', () => {
 	it('sets the code area in CSS mode and autofocuses it', () => {
 		renderComponent();
 		expect(
-			JSON.parse(screen.getByTestId('mock-code-area')!.dataset.options!)
+			JSON.parse(screen.getByTestId('mock-code-area').dataset.options!)
 		).toEqual(expect.objectContaining({autofocus: true, mode: 'css'}));
 	});
 
 	it('blinks the cursor if that preference is not set', () => {
 		renderComponent({prefs: {editorCursorBlinks: true}});
 		expect(
-			JSON.parse(screen.getByTestId('mock-code-area')!.dataset.options!)
+			JSON.parse(screen.getByTestId('mock-code-area').dataset.options!)
 		).not.toEqual(expect.objectContaining({cursorBlinkRate: 0}));
 	});
 
 	it("doesn't blink the cursor if that preference is set", () => {
 		renderComponent({prefs: {editorCursorBlinks: false}});
 		expect(
-			JSON.parse(screen.getByTestId('mock-code-area')!.dataset.options!)
+			JSON.parse(screen.getByTestId('mock-code-area').dataset.options!)
 		).toEqual(expect.objectContaining({cursorBlinkRate: 0}));
 	});
 
 	describe('When CodeMirror is enabled', () => {
 		it('uses CodeMirror on its code area', () => {
 			renderComponent({prefs: {useCodeMirror: true}});
-			expect(screen.getByTestId('mock-code-area')!.dataset.useCodeMirror).toBe(
+			expect(screen.getByTestId('mock-code-area').dataset.useCodeMirror).toBe(
 				'true'
 			);
 		});
@@ -136,7 +136,7 @@ describe('<StoryStylesheetDialog>', () => {
 	describe('When CodeMirror is disabled', () => {
 		it("doesn't use CodeMirror on its code area", () => {
 			renderComponent({prefs: {useCodeMirror: false}});
-			expect(screen.getByTestId('mock-code-area')!.dataset.useCodeMirror).toBe(
+			expect(screen.getByTestId('mock-code-area').dataset.useCodeMirror).toBe(
 				'false'
 			);
 		});

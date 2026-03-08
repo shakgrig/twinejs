@@ -33,7 +33,7 @@ const selectors = {
  * Convenience function to convert a string value to an float.
  */
 function float(stringValue: string) {
-	return parseFloat(stringValue);
+	return Number.parseFloat(stringValue);
 }
 
 /**
@@ -85,7 +85,7 @@ function domToObject(storyEl: Element): ImportedStory {
 		tags: storyEl.getAttribute('tags')
 			? storyEl.getAttribute('tags')!.split(/\s+/)
 			: [],
-		zoom: parseFloat(storyEl.getAttribute('zoom') ?? '1'),
+		zoom: Number.parseFloat(storyEl.getAttribute('zoom') ?? '1'),
 		tagColors: query(storyEl, selectors.tagColors).reduce((result, el) => {
 			const tagName: string | null = el.getAttribute('name');
 

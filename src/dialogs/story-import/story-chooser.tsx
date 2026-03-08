@@ -1,4 +1,4 @@
-import {IconFileImport} from '@tabler/icons';
+import {IconFileImport} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {CheckboxButton} from '../../components/control/checkbox-button';

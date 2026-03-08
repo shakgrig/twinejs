@@ -25,11 +25,13 @@ describe('saveStory()', () => {
 		story = fakeStory();
 		story.storyFormat = formatsState[0].name;
 		story.storyFormatVersion = formatsState[0].version;
-		(window as any).twineElectron = {saveStoryHtml};
+		(globalThis as any).twineElectron = {saveStoryHtml};
 		jest.spyOn(console, 'warn').mockReturnValue();
 	});
 
-	afterEach(() => delete (window as TwineElectronWindow).twineElectron);
+	afterEach(
+		() => delete (globalThis as unknown as TwineElectronWindow).twineElectron
+	);
 
 	it('calls saveStoryHtml on the twineElectron global', async () => {
 		await saveStory(story, formatsState);
@@ -68,7 +70,7 @@ describe('saveStory()', () => {
 	it('sends story data only if the format cannot be loaded', async () => {
 		jest
 			.spyOn(fetchStoryFormatProperties, 'fetchStoryFormatProperties')
-			.mockRejectedValue(new Error());
+			.mockRejectedValue(new Error('Mock story format loading failure'));
 
 		await saveStory(story, [
 			{...formatsState[0], loadState: 'unloaded', properties: undefined} as any

@@ -20,12 +20,12 @@ describe('getUserCss', () => {
 
 	it('returns undefined and  if the file could not be read', async () => {
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
-		readFileMock.mockImplementation(() => Promise.reject(new Error()));
+		readFileMock.mockImplementation(() => Promise.reject(new Error('Failed to read file')));
 
 		expect(await getUserCss()).toBeUndefined();
-		expect(warnSpy).toBeCalledTimes(1);
+		expect(warnSpy).toHaveBeenCalledTimes(1);
 	});
 });

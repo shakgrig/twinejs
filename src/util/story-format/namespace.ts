@@ -5,5 +5,5 @@ import {StoryFormat} from '../../store/story-formats';
  * CodeMirror names (modes and commands).
  */
 export function namespaceForFormat(format: StoryFormat) {
-	return format.name.toLowerCase().replace(/\s/g, '-') + '-' + format.version;
+	return format.name.toLowerCase().replaceAll(' ', '-') + '-' + format.version;
 }

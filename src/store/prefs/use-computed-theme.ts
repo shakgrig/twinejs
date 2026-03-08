@@ -6,7 +6,7 @@ export function useComputedTheme() {
 
 	const {prefs} = usePrefsContext();
 	const [mediaQuery] = React.useState(
-		window.matchMedia('(prefers-color-scheme: dark)')
+		globalThis.matchMedia('(prefers-color-scheme: dark)')
 	);
 	const [systemTheme, setSystemTheme] = React.useState<'dark' | 'light'>(
 		mediaQuery.matches ? 'dark' : 'light'

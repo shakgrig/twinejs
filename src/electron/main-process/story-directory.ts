@@ -1,6 +1,6 @@
 import {app, dialog, shell} from 'electron';
 import {copy, mkdirp, readdir, remove, stat} from 'fs-extra';
-import {join} from 'path';
+import {join} from 'node:path';
 import {i18n} from './locales';
 import {getAppPref, setAppPref} from './app-prefs';
 import {showRelaunchDialog} from './relaunch-dialog';
@@ -34,7 +34,7 @@ export async function initStoryDirectory() {
 			storyDirectoryPath = prefPath;
 			console.log(`Story library path initialized as ${storyDirectoryPath}`);
 			return;
-		} catch (error) {
+		} catch {
 			// Maybe it doesn't exist yet. Try creating it.
 
 			try {
@@ -42,7 +42,7 @@ export async function initStoryDirectory() {
 				await readdir(prefPath);
 				storyDirectoryPath = prefPath;
 				return;
-			} catch (error) {
+			} catch {
 				// OK, we give up.
 
 				const {response} = await dialog.showMessageBox({
@@ -150,7 +150,7 @@ export async function backupStoryDirectory(maxBackups = 10) {
 	console.log(`Backed up story library to ${backupDirectoryName}`);
 
 	const backupDirs = (await readdir(backupPath, {withFileTypes: true})).filter(
-		file => file.isDirectory() && file.name[0] !== '.'
+		file => file.isDirectory() && !file.name.startsWith('.')
 	);
 
 	if (backupDirs.length > maxBackups) {

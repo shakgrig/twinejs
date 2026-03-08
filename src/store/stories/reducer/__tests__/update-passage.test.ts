@@ -56,12 +56,11 @@ describe('Story reducer updatePassage action handler', () => {
 		expect(result[0].lastUpdate).toBe(oldDate);
 	});
 
-
 	it('issues a warning and makes no changes if another passage has the name being updated to', () => {
 		story.passages.push(fakePassage());
 
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(
@@ -74,7 +73,7 @@ describe('Story reducer updatePassage action handler', () => {
 
 	it('issues a warning and makes no changes if no passage in state has the ID requested', () => {
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(
@@ -87,7 +86,7 @@ describe('Story reducer updatePassage action handler', () => {
 
 	it('issues a warning and makes no changes if no story in state has the ID requested', () => {
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(

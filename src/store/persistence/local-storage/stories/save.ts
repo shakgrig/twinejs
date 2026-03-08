@@ -21,14 +21,14 @@ export type StorageUpdater = (transaction: StorageTransaction) => void;
  */
 export function doUpdateTransaction(updater: StorageUpdater) {
 	const transaction = {
-		passageIds: window.localStorage.getItem('twine-passages') ?? '',
-		storyIds: window.localStorage.getItem('twine-stories') ?? ''
+		passageIds: globalThis.localStorage.getItem('twine-passages') ?? '',
+		storyIds: globalThis.localStorage.getItem('twine-stories') ?? ''
 	};
 
 	updater(transaction);
 
-	window.localStorage.setItem('twine-stories', transaction.storyIds);
-	window.localStorage.setItem('twine-passages', transaction.passageIds);
+	globalThis.localStorage.setItem('twine-stories', transaction.storyIds);
+	globalThis.localStorage.setItem('twine-passages', transaction.passageIds);
 }
 
 /**
@@ -44,7 +44,7 @@ export function saveStory(transaction: StorageTransaction, story: Story) {
 	// We have to remove the passages property before serializing the story,
 	// as those are serialized under separate keys.
 
-	window.localStorage.setItem(
+	globalThis.localStorage.setItem(
 		`twine-stories-${story.id}`,
 		JSON.stringify({...story, passages: undefined})
 	);
@@ -60,7 +60,7 @@ export function deleteStory(transaction: StorageTransaction, story: Story) {
 	}
 
 	transaction.storyIds = remove(transaction.storyIds, story.id);
-	window.localStorage.removeItem(`twine-stories-${story.id}`);
+	globalThis.localStorage.removeItem(`twine-stories-${story.id}`);
 }
 
 /**
@@ -72,7 +72,7 @@ export function savePassage(transaction: StorageTransaction, passage: Passage) {
 	}
 
 	transaction.passageIds = addUnique(transaction.passageIds, passage.id);
-	window.localStorage.setItem(
+	globalThis.localStorage.setItem(
 		`twine-passages-${passage.id}`,
 		JSON.stringify(passage)
 	);
@@ -100,5 +100,5 @@ export function deletePassageById(
 	passageId: string
 ) {
 	transaction.passageIds = remove(transaction.passageIds, passageId);
-	window.localStorage.removeItem(`twine-passages-${passageId}`);
+	globalThis.localStorage.removeItem(`twine-passages-${passageId}`);
 }

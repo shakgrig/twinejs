@@ -8,7 +8,7 @@ import {
 	stat,
 	writeFile
 } from 'fs-extra';
-import {basename, join} from 'path';
+import {basename, join} from 'node:path';
 import {i18n} from './locales';
 import {getStoryDirectoryPath} from './story-directory';
 import {Story} from '../../store/stories/stories.types';

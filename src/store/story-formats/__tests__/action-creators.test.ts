@@ -103,7 +103,6 @@ describe('loadFormatProperties', () => {
 	});
 
 	it('sets the format state to loading while properties are being fetched', () => {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		fetchPropertiesMock.mockImplementationOnce(() => new Promise(() => {}));
 		loadFormatProperties(format)(dispatch);
 		expect(dispatch.mock.calls).toEqual([
@@ -222,7 +221,7 @@ describe('loadFormatProperties', () => {
 		let loadError: Error;
 
 		beforeEach(() => {
-			loadError = new Error();
+				loadError = new Error('Mock load error');
 
 			fetchPropertiesMock.mockImplementationOnce((url: string) => {
 				if (url !== format.url) {

@@ -138,7 +138,7 @@ describe('Story reducer createPassages action handler', () => {
 		const oldPassage = story.passages[0];
 		const passage = fakePassage();
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(
@@ -154,7 +154,7 @@ describe('Story reducer createPassages action handler', () => {
 				startPassage: expect.any(String)
 			}
 		]);
-		expect(warnSpy).toBeCalledTimes(1);
+		expect(warnSpy).toHaveBeenCalledTimes(1);
 	});
 
 	it('issues a warning and skips that change if a passage with the same ID already exists in the story', () => {
@@ -162,7 +162,7 @@ describe('Story reducer createPassages action handler', () => {
 		const oldPassage = story.passages[0];
 		const passage = fakePassage();
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(
@@ -178,19 +178,19 @@ describe('Story reducer createPassages action handler', () => {
 				startPassage: expect.any(String)
 			}
 		]);
-		expect(warnSpy).toBeCalledTimes(1);
+		expect(warnSpy).toHaveBeenCalledTimes(1);
 	});
 
 	it('issues a warning and makes no changes if there is no story with the ID specified in state', () => {
 		const story = fakeStory(0);
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(
 			createPassages([story], story.id + 'wrong', [fakePassage()])
 		).toEqual([story]);
-		expect(warnSpy).toBeCalledTimes(1);
+		expect(warnSpy).toHaveBeenCalledTimes(1);
 	});
 
 	it("changes the parent story's lastUpdate property", () => {

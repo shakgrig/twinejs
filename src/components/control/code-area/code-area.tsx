@@ -47,6 +47,7 @@ export const CodeArea: React.FC<CodeAreaProps> = props => {
 	} = props;
 	const containerRef = React.useRef<HTMLDivElement>(null);
 	const style: React.CSSProperties = {};
+	const placeholder = otherProps.options?.placeholder;
 
 	if (fontFamily) {
 		style.fontFamily = fontFamily.includes(' ')
@@ -67,7 +68,6 @@ export const CodeArea: React.FC<CodeAreaProps> = props => {
 		onChangeText(text, data);
 	}
 
-	// We need to set the ID of the underlying <textarea> ourselves if we're using
 	// CodeMirror.
 
 	React.useEffect(() => {
@@ -100,7 +100,9 @@ export const CodeArea: React.FC<CodeAreaProps> = props => {
 					className="visible"
 					id={id}
 					onChange={({target}) => onChangeText(target.value)}
-					placeholder={otherProps.options?.placeholder}
+					placeholder={
+						typeof placeholder === 'string' ? placeholder : undefined
+					}
 					style={style}
 				>
 					{otherProps.value}

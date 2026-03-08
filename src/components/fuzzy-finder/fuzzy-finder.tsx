@@ -1,4 +1,4 @@
-import {IconX} from '@tabler/icons';
+import {IconX} from '@tabler/icons-react';
 import classnames from 'classnames';
 import * as React from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
@@ -39,8 +39,8 @@ export const FuzzyFinder: React.FC<FuzzyFinderProps> = props => {
 		'escape',
 		onClose,
 		{
-			enableOnTags: ['INPUT'],
-			filter: () => elementIsFocused(inputRef.current)
+			enableOnFormTags: ['INPUT'],
+			enabled: () => elementIsFocused(inputRef.current)
 		},
 		[onClose]
 	);
@@ -48,8 +48,8 @@ export const FuzzyFinder: React.FC<FuzzyFinderProps> = props => {
 		'return',
 		() => onSelectResult(selectedResult),
 		{
-			enableOnTags: ['INPUT'],
-			filter: () => elementIsFocused(inputRef.current)
+			enableOnFormTags: ['INPUT'],
+			enabled: () => elementIsFocused(inputRef.current)
 		},
 		[onSelectResult, selectedResult]
 	);
@@ -60,8 +60,8 @@ export const FuzzyFinder: React.FC<FuzzyFinderProps> = props => {
 				value === 0 ? results.length - 1 : value - 1
 			),
 		{
-			enableOnTags: ['INPUT'],
-			filter: () => elementIsFocused(inputRef.current)
+			enableOnFormTags: ['INPUT'],
+			enabled: () => elementIsFocused(inputRef.current)
 		},
 		[onSelectResult, selectedResult]
 	);
@@ -72,8 +72,8 @@ export const FuzzyFinder: React.FC<FuzzyFinderProps> = props => {
 				value === results.length - 1 ? 0 : value + 1
 			),
 		{
-			enableOnTags: ['INPUT'],
-			filter: () => elementIsFocused(inputRef.current)
+			enableOnFormTags: ['INPUT'],
+			enabled: () => elementIsFocused(inputRef.current)
 		},
 		[onSelectResult, selectedResult]
 	);
@@ -85,13 +85,13 @@ export const FuzzyFinder: React.FC<FuzzyFinderProps> = props => {
 		// component is mounted in reaction to a hotkey, the input will receive the
 		// hotkey input.
 
-		const timeout = window.setTimeout(() => {
+		const timeout = globalThis.setTimeout(() => {
 			if (containerRef.current) {
 				containerRef.current.querySelector('input')?.focus();
 			}
 		}, 0);
 
-		return () => window.clearTimeout(timeout);
+		return () => globalThis.clearTimeout(timeout);
 	}, []);
 
 	return (

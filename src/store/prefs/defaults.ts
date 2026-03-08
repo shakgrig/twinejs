@@ -8,14 +8,14 @@ export const defaults = (): PrefsState => ({
 	disabledStoryFormatEditorExtensions: [],
 	donateShown: false,
 	editorCursorBlinks: true,
-	firstRunTime: new Date().getTime(),
+	firstRunTime: Date.now(),
 	lastUpdateSeen: '',
-	lastUpdateCheckTime: new Date().getTime(),
+	lastUpdateCheckTime: Date.now(),
 	locale:
-		(window.navigator as any).userLanguage ||
-		window.navigator.language ||
-		(window.navigator as any).browserLanguage ||
-		(window.navigator as any).systemLanguage ||
+		(globalThis.navigator as any).userLanguage ||
+		globalThis.navigator.language ||
+		(globalThis.navigator as any).browserLanguage ||
+		(globalThis.navigator as any).systemLanguage ||
 		'en-us',
 	passageEditorFontFamily: 'var(--font-system)',
 	passageEditorFontScale: 1,

@@ -33,8 +33,7 @@ describe('<CodeArea>', () => {
 		it('sets a style on the container based on the fontFamily and fontScale props', () => {
 			renderComponent({fontFamily: 'my-custom-font', fontScale: 1.5});
 
-			const inputStyle = window.getComputedStyle(
-				// eslint-disable-next-line testing-library/no-node-access
+			const inputStyle = globalThis.getComputedStyle(
 				document.querySelector('.code-area')!
 			);
 
@@ -69,8 +68,7 @@ describe('<CodeArea>', () => {
 				useCodeMirror: false
 			});
 
-			const inputStyle = window.getComputedStyle(
-				// eslint-disable-next-line testing-library/no-node-access
+			const inputStyle = globalThis.getComputedStyle(
 				document.querySelector('.code-area')!
 			);
 

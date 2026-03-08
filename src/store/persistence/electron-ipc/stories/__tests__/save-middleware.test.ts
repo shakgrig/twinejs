@@ -23,7 +23,7 @@ describe('stories Electron IPC save middleware', () => {
 		storiesState = [fakeStory(2)];
 		storiesState[0].storyFormat = formatsState[0].name;
 		storiesState[0].storyFormatVersion = formatsState[0].version;
-		(window as any).twineElectron = {
+		(globalThis as any).twineElectron = {
 			deleteStory,
 			onceStoryRenamed,
 			renameStory
@@ -42,7 +42,9 @@ describe('stories Electron IPC save middleware', () => {
 		);
 	});
 
-	afterEach(() => delete (window as TwineElectronWindow).twineElectron);
+	afterEach(
+		() => delete (globalThis as unknown as TwineElectronWindow).twineElectron
+	);
 
 	it.each([
 		['init', () => ({type: 'init', state: []})],

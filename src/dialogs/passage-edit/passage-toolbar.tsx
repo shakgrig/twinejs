@@ -1,4 +1,4 @@
-import {IconResize} from '@tabler/icons';
+import {IconResize} from '@tabler/icons-react';
 import {Editor} from 'codemirror';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
@@ -70,7 +70,6 @@ export const PassageToolbar: React.FC<PassageToolbarProps> = props => {
 			)}
 			<TagCardButton
 				allTags={passageTags}
-				id={`passage-tag-input-${passage.id}`}
 				onAdd={handleAddTag}
 				onChangeColor={handleChangeTagColor}
 				onRemove={handleRemoveTag}

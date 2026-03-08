@@ -428,7 +428,6 @@ describe('stories local storage save middleware', () => {
 			]);
 		});
 
-
 		it("throws an error if the story doesn't exist in state", () =>
 			expect(() =>
 				saveMiddleware(state, {

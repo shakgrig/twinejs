@@ -23,7 +23,7 @@ describe('Story reducer createStory action handler', () => {
 		story2.id = story1.id;
 
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(createStory(state, story2)).toBe(state);
@@ -38,7 +38,7 @@ describe('Story reducer createStory action handler', () => {
 		story2.name = story1.name;
 
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(createStory(state, story2)).toEqual(state);

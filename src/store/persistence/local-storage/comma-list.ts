@@ -6,7 +6,7 @@
  * Returns whether a list contains a value.
  */
 export function contains(list: string, value: string) {
-	return new RegExp('\\b' + value + '\\b').test(list);
+	return new RegExp(String.raw`\b${value}\b`).test(list);
 }
 
 /**
@@ -32,7 +32,7 @@ export function remove(list: string, value: string) {
 
 	// We end up with a leading comma if we just removed the first value.
 
-	if (list[0] === ',') {
+	if (list.startsWith(',')) {
 		return list.substring(1);
 	}
 

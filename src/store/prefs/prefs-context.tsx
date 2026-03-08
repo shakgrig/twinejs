@@ -14,7 +14,7 @@ PrefsContext.displayName = 'Prefs';
 
 export const usePrefsContext = () => React.useContext(PrefsContext);
 
-export const PrefsContextProvider: React.FC = props => {
+export const PrefsContextProvider: React.FC<React.PropsWithChildren> = props => {
 	const {prefs} = usePersistence();
 	const {reportError} = useStoreErrorReporter();
 	const persistedReducer: React.Reducer<
@@ -36,14 +36,16 @@ export const PrefsContextProvider: React.FC = props => {
 	);
 
 	const [state, dispatch] = React.useReducer(persistedReducer, defaults());
+	const contextValue = React.useMemo(
+		() => ({
+			dispatch,
+			prefs: state
+		}),
+		[dispatch, state]
+	);
 
 	return (
-		<PrefsContext.Provider
-			value={{
-				dispatch,
-				prefs: state
-			}}
-		>
+		<PrefsContext.Provider value={contextValue}>
 			{props.children}
 		</PrefsContext.Provider>
 	);

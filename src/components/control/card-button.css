@@ -1,3 +1,12 @@
 .card-button-card {
+	background: transparent;
+	border: 0;
+	color: inherit;
+	height: auto;
+	margin: 0;
+	max-height: none;
+	max-width: none;
+	padding: 0;
+	width: auto;
 	z-index: 1000;
 }

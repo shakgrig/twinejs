@@ -27,7 +27,7 @@ export interface PublishOptions {
  * Returns a filename for an archive file.
  */
 export function archiveFilename() {
-	const timestamp = new Date().toLocaleString().replace(/[/:\\]/g, '.');
+	const timestamp = new Date().toLocaleString().replaceAll(/[/:\\]/g, '.');
 
 	return i18n.t('store.archiveFilename', {timestamp});
 }
@@ -81,7 +81,7 @@ export function publishStory(
 			);
 		}
 
-		if (!story.passages.find(p => p.id === startId)) {
+		if (!story.passages.some(p => p.id === startId)) {
 			throw new Error(
 				'The passage set as starting point for this story does not exist.'
 			);
@@ -112,7 +112,7 @@ export function publishStory(
 
 	return (
 		`<tw-storydata name="${escape(story.name)}" ` +
-		`startnode="${startLocalId || ''}" ` +
+		`startnode="${startLocalId ?? ''}" ` +
 		`creator="${escape(appInfo.name)}" ` +
 		`creator-version="${escape(appInfo.version)}" ` +
 		`format="${escape(story.storyFormat)}" ` +
@@ -153,8 +153,8 @@ export function publishStoryWithFormat(
 	// We use function replacements to protect the data from accidental
 	// interactions with the special string replacement patterns.
 
-	output = output.replace(/{{STORY_NAME}}/g, () => escape(story.name));
-	output = output.replace(/{{STORY_DATA}}/g, () =>
+	output = output.replaceAll('{{STORY_NAME}}', () => escape(story.name));
+	output = output.replaceAll('{{STORY_DATA}}', () =>
 		publishStory(story, appInfo, {formatOptions, startId})
 	);
 

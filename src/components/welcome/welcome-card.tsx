@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import {IconArrowRight, IconArrowBarToRight} from '@tabler/icons';
+import {IconArrowRight, IconArrowBarToRight} from '@tabler/icons-react';
 import {ButtonBar} from '../container/button-bar';
 import {Card, CardContent, CardProps} from '../container/card';
 import {IconButton} from '../control/icon-button';

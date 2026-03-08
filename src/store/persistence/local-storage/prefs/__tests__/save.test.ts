@@ -2,22 +2,22 @@ import {save} from '../save';
 import {fakePrefs} from '../../../../../test-util';
 
 describe('prefs local storage save', () => {
-	beforeEach(() => window.localStorage.clear());
-	afterAll(() => window.localStorage.clear());
+	beforeEach(() => globalThis.localStorage.clear());
+	afterAll(() => globalThis.localStorage.clear());
 
 	it('saves preferences to local storage', () => {
 		const prefs = fakePrefs();
 
 		save(prefs);
 
-		const ids = window.localStorage.getItem('twine-prefs')!.split(',');
+		const ids = globalThis.localStorage.getItem('twine-prefs')!.split(',');
 
 		expect(ids.length).toBe(Object.keys(prefs).length);
 
 		const saved: any = {};
 
 		ids.forEach(id => {
-			const savedPref = window.localStorage.getItem(`twine-prefs-${id}`);
+			const savedPref = globalThis.localStorage.getItem(`twine-prefs-${id}`);
 
 			expect(typeof savedPref).toBe('string');
 			const restored = JSON.parse(savedPref as string);

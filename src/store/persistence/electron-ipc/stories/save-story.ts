@@ -12,7 +12,7 @@ import {fetchStoryFormatProperties} from '../../../../util/story-format/fetch-pr
  * Sends an IPC message to save a story to disk, ideally in published form.
  */
 export async function saveStory(story: Story, formats: StoryFormatsState) {
-	const {twineElectron} = window as TwineElectronWindow;
+	const {twineElectron} = globalThis as unknown as TwineElectronWindow;
 
 	if (!twineElectron) {
 		throw new Error('Electron bridge is not present on window.');

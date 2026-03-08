@@ -16,7 +16,7 @@ export function useStoryLaunch(): UseStoryLaunchProps {
 	const {proofStory, publishStory} = usePublishing();
 
 	if (isElectronRenderer()) {
-		const {twineElectron} = window as TwineElectronWindow;
+		const {twineElectron} = globalThis as unknown as TwineElectronWindow;
 
 		if (!twineElectron) {
 			throw new Error('Electron bridge is not present on window.');
@@ -51,13 +51,13 @@ export function useStoryLaunch(): UseStoryLaunchProps {
 
 	return {
 		playStory: async storyId => {
-			window.open(`#/stories/${storyId}/play`, '_blank');
+			globalThis.open(`#/stories/${storyId}/play`, '_blank');
 		},
 		proofStory: async storyId => {
-			window.open(`#/stories/${storyId}/proof`, '_blank');
+			globalThis.open(`#/stories/${storyId}/proof`, '_blank');
 		},
 		testStory: async (storyId, startPassageId) => {
-			window.open(
+			globalThis.open(
 				startPassageId
 					? `#/stories/${storyId}/test/${startPassageId}`
 					: `#/stories/${storyId}/test`,

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 interface CSSTransitionProps {
+	children?: React.ReactNode;
 	in?: boolean;
 }
 
@@ -10,7 +11,9 @@ export const CSSTransition: React.FC<CSSTransitionProps> = props => (
 
 // Force children in.
 
-export const TransitionGroup: React.FC = ({children}) => (
+export const TransitionGroup: React.FC<React.PropsWithChildren> = ({
+	children
+}) => (
 	<>
 		{React.Children.map(children, child => {
 			const childNode = child as React.ReactElement;
@@ -19,4 +22,3 @@ export const TransitionGroup: React.FC = ({children}) => (
 		})}
 	</>
 );
-

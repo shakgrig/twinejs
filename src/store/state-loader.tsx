@@ -6,7 +6,7 @@ import {useStoriesContext} from './stories';
 import {useStoryFormatsContext} from './story-formats';
 import {useStoriesRepair} from './use-stories-repair';
 
-export const StateLoader: React.FC = ({children}) => {
+export const StateLoader: React.FC<React.PropsWithChildren> = ({children}) => {
 	const [initing, setIniting] = React.useState(false);
 	const [inited, setInited] = React.useState(false);
 	const [prefsRepaired, setPrefsRepaired] = React.useState(false);

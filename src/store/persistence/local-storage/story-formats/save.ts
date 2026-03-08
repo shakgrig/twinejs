@@ -6,11 +6,11 @@ export function save(state: StoryFormatsState) {
 	// preserve ids.
 
 	const previouslySerialized =
-		window.localStorage.getItem('twine-storyformats');
+		globalThis.localStorage.getItem('twine-storyformats');
 
 	if (previouslySerialized) {
 		previouslySerialized.split(',').forEach(id => {
-			window.localStorage.removeItem(`twine-storyformats-${id}`);
+			globalThis.localStorage.removeItem(`twine-storyformats-${id}`);
 		});
 	}
 
@@ -25,7 +25,7 @@ export function save(state: StoryFormatsState) {
 		// dynamically added when loading.
 
 		ids.push(id);
-		window.localStorage.setItem(
+		globalThis.localStorage.setItem(
 			`twine-storyformats-${id}`,
 			JSON.stringify({
 				...format,
@@ -37,5 +37,5 @@ export function save(state: StoryFormatsState) {
 		);
 	}
 
-	window.localStorage.setItem('twine-storyformats', ids.join(','));
+	globalThis.localStorage.setItem('twine-storyformats', ids.join(','));
 }

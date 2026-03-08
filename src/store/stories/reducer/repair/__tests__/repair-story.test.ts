@@ -82,7 +82,7 @@ describe('repairStory', () => {
 	});
 
 	it('sets a default on a numeric story property if it is not a finite number', () => {
-		(story as any).zoom = NaN;
+		(story as any).zoom = Number.NaN;
 		expect(repairStory(story, [story], allFormats, defaultFormat)).toEqual({
 			...story,
 			zoom: 1

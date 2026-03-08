@@ -29,7 +29,7 @@ function checkPassageElAgainstData(el: Element, passage: Passage) {
 		throw new Error('Element has no pid attribute');
 	}
 
-	expect(parseInt(stringPid)).not.toBeNaN();
+	expect(Number.parseInt(stringPid)).not.toBeNaN();
 	expect(el.getAttribute('name')).toBe(passage.name);
 	expect(el.getAttribute('tags')).toBe(passage.tags.join(' '));
 	expect(el.getAttribute('position')).toBe(`${passage.left},${passage.top}`);

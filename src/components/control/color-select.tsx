@@ -1,11 +1,9 @@
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import classNames from 'classnames';
-import {IconCircle} from '@tabler/icons';
+import {IconCircle} from '@tabler/icons-react';
 import {colors, Color} from '../../util/color';
 import './color-select.css';
-
-// TODO make this use <MenuButton>
 
 export interface ColorSelectProps {
 	label: string;
@@ -26,7 +24,7 @@ export const ColorSelect: React.FC<ColorSelectProps> = props => {
 						<IconCircle />
 					</span>
 					<select
-						onChange={e => onChange(e.target.value as Color)}
+						onChange={e => onChange(e.target.value)}
 						value={value}
 					>
 						{colors.map(color => (

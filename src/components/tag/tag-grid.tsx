@@ -10,7 +10,16 @@ export interface TagGridProps {
 
 export const TagGrid: React.FC<TagGridProps> = React.memo(props => {
 	const tags = props.tags.filter(tag => tag in props.tagColors);
-	let rows = [];
+	let rows: string[][] = [];
+	const rowKeyCounts = new Map<string, number>();
+
+	function keyForRow(row: string[]) {
+		const base = row.join('\u001f') || 'empty';
+		const count = (rowKeyCounts.get(base) ?? 0) + 1;
+
+		rowKeyCounts.set(base, count);
+		return `row-${base}-${count}`;
+	}
 
 	// If there are 2 or fewer tags, put them each in a row by themselves.
 	// If there are more, split them into rows of two.
@@ -27,8 +36,8 @@ export const TagGrid: React.FC<TagGridProps> = React.memo(props => {
 
 	return (
 		<div className={classNames('tag-grid', {hidden: rows.length === 0})}>
-			{rows.map((row, index) => (
-				<span className="row" key={index}>
+			{rows.map(row => (
+				<span className="row" key={keyForRow(row)}>
 					{row.map(tag => (
 						<span
 							className={`color-${props.tagColors[tag]}`}

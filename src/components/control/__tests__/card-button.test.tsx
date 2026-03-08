@@ -20,7 +20,7 @@ describe('<CardButton>', () => {
 			</CardButton>
 		);
 
-		await act(async () => Promise.resolve());
+		await act(async () => {});
 		return result;
 	}
 
@@ -62,8 +62,34 @@ describe('<CardButton>', () => {
 		expect(onChangeOpen).not.toHaveBeenCalled();
 		expect(onClick).not.toHaveBeenCalled();
 		fireEvent.click(screen.getByText('mock-label'));
-		expect(onClick).toBeCalledTimes(1);
+		expect(onClick).toHaveBeenCalledTimes(1);
 		expect(onChangeOpen).not.toHaveBeenCalled();
+	});
+
+	it('stays open after clicking trigger in StrictMode', async () => {
+		const Demo: React.FC = () => {
+			const [open, setOpen] = React.useState(false);
+
+			return (
+				<React.StrictMode>
+					<CardButton
+						ariaLabel="strict-mode-card"
+						icon="mock-icon"
+						label="strict-mode-open"
+						onChangeOpen={setOpen}
+						open={open}
+					>
+						<button>strict-mode-child</button>
+					</CardButton>
+				</React.StrictMode>
+			);
+		};
+
+		render(<Demo />);
+		fireEvent.click(screen.getByText('strict-mode-open'));
+		await act(async () => {});
+
+		expect(screen.getByText('strict-mode-child')).toBeInTheDocument();
 	});
 
 	// This works in isolation but not with other tests--unsure why.

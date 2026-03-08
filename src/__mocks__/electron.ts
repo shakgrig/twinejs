@@ -19,11 +19,17 @@ export class BrowserWindow {
 		};
 	}
 
-	loadURL() {}
-	on() {}
-	once() {}
+	loadURL() {
+		return undefined;
+	}
+	on() {
+		return undefined;
+	}
+	once() {
+		return undefined;
+	}
 
-	static getFocusedWindow = jest.fn();
+	static readonly getFocusedWindow = jest.fn();
 }
 
 export const dialog = {

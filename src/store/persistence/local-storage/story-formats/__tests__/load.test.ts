@@ -12,16 +12,16 @@ describe('story formats local storage load', () => {
 	);
 	const formatIds = formatData.map(format => format.id).join(',');
 
-	beforeEach(() => window.localStorage.clear());
-	afterAll(() => window.localStorage.clear());
+	beforeEach(() => globalThis.localStorage.clear());
+	afterAll(() => globalThis.localStorage.clear());
 
 	it('restores formats', async () => {
-		window.localStorage.setItem('twine-storyformats', formatIds);
-		window.localStorage.setItem(
+		globalThis.localStorage.setItem('twine-storyformats', formatIds);
+		globalThis.localStorage.setItem(
 			`twine-storyformats-${formatData[0].id}`,
 			JSON.stringify(formatData[0])
 		);
-		window.localStorage.setItem(
+		globalThis.localStorage.setItem(
 			`twine-storyformats-${formatData[1].id}`,
 			JSON.stringify(formatData[1])
 		);

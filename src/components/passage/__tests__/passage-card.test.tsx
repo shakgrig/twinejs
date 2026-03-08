@@ -118,7 +118,7 @@ describe('<PassageCard>', () => {
 
 		renderComponent({passage});
 
-		const style = window.getComputedStyle(
+		const style = globalThis.getComputedStyle(
 			document.querySelector('.passage-card')!
 		);
 

@@ -21,7 +21,7 @@ describe('initLocales()', () => {
 
 	it('does not throw an error if loading user preferences fails', async () => {
 		jest.spyOn(console, 'warn').mockReturnValue();
-		loadPrefsMock.mockRejectedValue(new Error());
+		loadPrefsMock.mockRejectedValue(new Error('Failed to load prefs'));
 		expect(async () => await initLocales()).not.toThrow();
 		expect(changeLanguageMock).not.toHaveBeenCalled();
 	});

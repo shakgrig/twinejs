@@ -10,17 +10,31 @@ export const MenuButton: React.FC<MenuButtonProps> = ({
 	items,
 	label
 }) => {
+	const keyCounts = new Map<string, number>();
+
+	function keyFor(base: string) {
+		const count = (keyCounts.get(base) ?? 0) + 1;
+
+		keyCounts.set(base, count);
+		return `${base}-${count}`;
+	}
+
 	return (
 		<div data-testid={`mock-menu-button-${label}`} data-disabled={disabled}>
-			{items.map((item, index) => {
+			{items.map(item => {
 				if (item.separator) {
-					return <ButtonBarSeparator key={index} />;
+					return <ButtonBarSeparator key={keyFor('separator')} />;
 				}
+
+				const itemType = 'checkable' in item ? 'checkable' : item.variant;
+				const itemKey = keyFor(
+					`${itemType}-${item.label}-${item.disabled ? 'disabled' : 'enabled'}`
+				);
 
 				return 'checkable' in item ? (
 					<CheckboxButton
 						disabled={item.disabled}
-						key={index}
+						key={itemKey}
 						label={item.label}
 						onChange={item.onClick}
 						uncheckedIcon={<IconEmpty />}
@@ -30,7 +44,7 @@ export const MenuButton: React.FC<MenuButtonProps> = ({
 					<IconButton
 						disabled={item.disabled}
 						icon={<IconEmpty />}
-						key={index}
+						key={itemKey}
 						label={item.label}
 						onClick={item.onClick}
 						variant={item.variant}

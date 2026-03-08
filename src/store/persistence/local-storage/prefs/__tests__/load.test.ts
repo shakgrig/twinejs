@@ -1,12 +1,12 @@
 import {load} from '../load';
 
 describe('prefs local storage load', () => {
-	beforeEach(() => window.localStorage.clear());
-	afterAll(() => window.localStorage.clear());
+	beforeEach(() => globalThis.localStorage.clear());
+	afterAll(() => globalThis.localStorage.clear());
 
 	it('restores preferences', async () => {
-		window.localStorage.setItem('twine-prefs', 'mock-id,mock-id-2');
-		window.localStorage.setItem(
+		globalThis.localStorage.setItem('twine-prefs', 'mock-id,mock-id-2');
+		globalThis.localStorage.setItem(
 			'twine-prefs-mock-id',
 			JSON.stringify({
 				name: 'foo',
@@ -14,7 +14,7 @@ describe('prefs local storage load', () => {
 				value: true
 			})
 		);
-		window.localStorage.setItem(
+		globalThis.localStorage.setItem(
 			'twine-prefs-mock-id-2',
 			JSON.stringify({
 				name: 'bar',
@@ -24,5 +24,19 @@ describe('prefs local storage load', () => {
 		);
 
 		expect(await load()).toEqual({bar: 1, foo: true});
+	});
+
+	it('ignores blank preference IDs in the preference list', async () => {
+		globalThis.localStorage.setItem('twine-prefs', ',mock-id,,   ,');
+		globalThis.localStorage.setItem(
+			'twine-prefs-mock-id',
+			JSON.stringify({
+				name: 'foo',
+				id: 'mock-id',
+				value: true
+			})
+		);
+
+		expect(await load()).toEqual({foo: true});
 	});
 });

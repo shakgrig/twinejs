@@ -1,6 +1,6 @@
 import {app} from 'electron';
 import {readFile} from 'fs-extra';
-import {join} from 'path';
+import {join} from 'node:path';
 import {i18n} from './locales';
 
 export async function getUserCss(): Promise<string | undefined> {

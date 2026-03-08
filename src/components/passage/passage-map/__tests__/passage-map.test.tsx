@@ -119,7 +119,7 @@ describe('<PassageMap>', () => {
 				)
 			).getByText('simulate drag')
 		);
-		expect(onSelect).not.toBeCalled();
+		expect(onSelect).not.toHaveBeenCalled();
 	});
 
 	it('is accessible', async () => {

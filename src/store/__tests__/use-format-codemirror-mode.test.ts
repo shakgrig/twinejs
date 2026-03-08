@@ -1,4 +1,4 @@
-import {renderHook} from '@testing-library/react-hooks';
+import {renderHook} from '@testing-library/react';
 import CodeMirror from 'codemirror';
 import {
 	fakeFailedStoryFormat,
@@ -143,11 +143,11 @@ describe('useFormatCodeMirrorMode()', () => {
 			).toBeUndefined();
 		});
 
-		it('throws an error if a nonexistent format is requested', () =>
-			expect(
-				renderHook(() => useFormatCodeMirrorMode('nonexistent', '1.0.0')).result
-					.error
-			).not.toBeUndefined());
+		it('throws an error if a nonexistent format is requested', () => {
+			expect(() =>
+				renderHook(() => useFormatCodeMirrorMode('nonexistent', '1.0.0'))
+			).toThrow();
+		});
 	});
 
 	describe('when the format extensions are disabled', () => {

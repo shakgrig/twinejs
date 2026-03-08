@@ -14,7 +14,7 @@ export function createUntitledPassage(
 	centerY: number
 ): CreatePassageAction {
 	if (!Number.isFinite(centerX) || !Number.isFinite(centerY)) {
-		throw new Error('Center must be a finite coordinate pair');
+		throw new TypeError('Center must be a finite coordinate pair');
 	}
 
 	const defs = passageDefaults();

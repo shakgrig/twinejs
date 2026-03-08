@@ -29,6 +29,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 	(props, ref) => {
 		const {
 			ariaChecked,
+			buttonType = 'button',
 			disabled,
 			icon,
 			iconOnly,
@@ -51,7 +52,9 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 		const [button, setButton] = React.useState<HTMLButtonElement | null>(null);
 		React.useImperativeHandle(ref, () => button as HTMLButtonElement);
 		const handleOnClick = (e: React.MouseEvent) => {
-			onClick && onClick(e);
+			if (onClick) {
+				onClick(e);
+			}
 
 			if (preventDefault) {
 				e.preventDefault();
@@ -69,6 +72,7 @@ export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
 					onClick={handleOnClick}
 					ref={setButton}
 					role={role}
+					type={buttonType}
 				>
 					<span className="icon">{icon}</span>
 					{!iconOnly && (props.displayLabel ?? props.label)}

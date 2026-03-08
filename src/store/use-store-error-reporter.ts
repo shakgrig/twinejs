@@ -13,7 +13,7 @@ export function useStoreErrorReporter() {
 			console.error('Twine store error', error);
 
 			if (ready) {
-				window.alert(
+					globalThis.alert(
 					t(messageKey, {error: error.message}) +
 						' ' +
 						t(
@@ -23,7 +23,7 @@ export function useStoreErrorReporter() {
 						)
 				);
 			} else {
-				window.alert(
+					globalThis.alert(
 					`An error occurred while saving (${error.message}). Reloading or restarting the application may help.`
 				);
 			}

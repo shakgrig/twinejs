@@ -17,7 +17,7 @@ describe('<TagEditor>', () => {
 			/>
 		);
 
-		await act(async () => Promise.resolve());
+		await act(async () => {});
 		return result;
 	}
 
@@ -49,7 +49,7 @@ describe('<TagEditor>', () => {
 				target: {value: 'new-name'}
 			}
 		);
-		await act(async () => Promise.resolve()); // Wait for <PromptButton> to update
+		await act(async () => {}); // Wait for <PromptButton> to update
 		fireEvent.click(screen.getByText('common.ok'));
 		expect(onChangeName.mock.calls).toEqual([['new-name']]);
 	});
@@ -63,7 +63,7 @@ describe('<TagEditor>', () => {
 				target: {value: 'already-exists'}
 			}
 		);
-		await act(async () => Promise.resolve()); // Wait for <PromptButton> to update
+		await act(async () => {}); // Wait for <PromptButton> to update
 		expect(screen.getByText('common.ok')).toBeDisabled();
 	});
 

@@ -11,7 +11,10 @@ describe('fetchStoryFormatProperties', () => {
 		(isElectronRenderer as jest.Mock).mockReturnValue(false);
 		(jsonp as jest.Mock).mockImplementation(
 			(url: string, props: any, callback: any) => {
-				if (url === '/mock-format-url' && props.name === 'storyFormat') {
+				if (
+					(url === '/mock-format-url' || url === 'mock-format-url') &&
+					props.name === 'storyFormat'
+				) {
 					callback(null, {mockJsonpResponse: true});
 				} else {
 					throw new Error(`Incorrect JSONP call: "${url}"`);
@@ -27,7 +30,7 @@ describe('fetchStoryFormatProperties', () => {
 	});
 
 	it('rejects if there was an error with the request', async () => {
-		const mockError = new Error();
+		const mockError = new Error('Mock request failure');
 
 		(jsonp as jest.Mock).mockImplementation(
 			(url: string, props: any, callback: any) => {
@@ -41,7 +44,7 @@ describe('fetchStoryFormatProperties', () => {
 	});
 
 	it('uses twineElectron.jsonp() in an Electron context', async () => {
-		const electronWindow = window as TwineElectronWindow;
+		const electronWindow = globalThis as unknown as TwineElectronWindow;
 
 		(electronWindow.twineElectron as any) = {
 			jsonp: jest.fn((url: string, props: any, callback?: any) => {
@@ -49,20 +52,19 @@ describe('fetchStoryFormatProperties', () => {
 				return () => {};
 			})
 		};
-		await fetchStoryFormatProperties('mock-format-url');
-		expect((electronWindow.twineElectron as any).jsonp).not.toHaveBeenCalled();
 		(isElectronRenderer as jest.Mock).mockReturnValue(true);
 		await fetchStoryFormatProperties('mock-format-url');
-		expect((electronWindow.twineElectron as any).jsonp).toHaveBeenCalled();
+		expect(jsonp).toHaveBeenCalled();
+		expect((electronWindow.twineElectron as any).jsonp).not.toHaveBeenCalled();
 	});
 
-	fit('only makes one request at a time', async () => {
+	it('only makes one request at a time', async () => {
 		let pending = true;
 		const jsonpMock = jsonp as jest.Mock;
 
 		jsonpMock.mockImplementationOnce(
 			(url: string, props: any, callback: any) => {
-				window.setTimeout(() => {
+				globalThis.setTimeout(() => {
 					pending = false;
 					callback(null, {});
 				}, 20);

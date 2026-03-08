@@ -14,6 +14,10 @@ import {checkForUpdate} from './check-for-update';
 import {toggleHardwareAcceleration} from './hardware-acceleration';
 import {getAppPref} from './app-prefs';
 
+function runInBackground(task: () => Promise<unknown>) {
+	void task();
+}
+
 export function initMenuBar() {
 	const template: MenuItemConstructorOptions[] = [
 		{
@@ -22,11 +26,11 @@ export function initMenuBar() {
 				{role: 'about'},
 				{
 					label: i18n.t('electron.menuBar.checkForUpdates'),
-					click: checkForUpdate
+						click: () => runInBackground(checkForUpdate)
 				},
 				{
 					label: i18n.t('electron.menuBar.setStoryLibraryFolder'),
-					click: chooseStoryDirectoryPath
+						click: () => runInBackground(chooseStoryDirectoryPath)
 				},
 				{type: 'separator'},
 				{role: 'quit'}
@@ -50,7 +54,7 @@ export function initMenuBar() {
 			submenu: [
 				{
 					label: i18n.t('electron.menuBar.showStoryLibrary'),
-					click: revealStoryDirectory
+						click: () => runInBackground(revealStoryDirectory)
 				},
 				{type: 'separator'},
 				{role: 'resetZoom'},
@@ -68,7 +72,10 @@ export function initMenuBar() {
 			submenu: [
 				{
 					label: i18n.t('electron.menuBar.twineHelp'),
-					click: () => shell.openExternal('https://twinery.org/2guide')
+						click: () =>
+							runInBackground(() =>
+								shell.openExternal('https://twinery.org/2guide')
+							)
 				},
 				{type: 'separator'},
 				{
@@ -96,11 +103,11 @@ export function initMenuBar() {
 			{role: 'about'},
 			{
 				label: i18n.t('electron.menuBar.checkForUpdates'),
-				click: checkForUpdate
+				click: () => runInBackground(checkForUpdate)
 			},
 			{
 				label: i18n.t('electron.menuBar.setStoryLibraryFolder'),
-				click: chooseStoryDirectoryPath
+				click: () => runInBackground(chooseStoryDirectoryPath)
 			},
 			{type: 'separator'},
 			{role: 'services', submenu: []},

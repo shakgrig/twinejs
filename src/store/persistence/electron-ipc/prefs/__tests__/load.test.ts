@@ -3,7 +3,7 @@ import {TwineElectronWindow} from '../../../../../electron/shared';
 import {fakePrefs} from '../../../../../test-util';
 
 describe('prefs Electron IPC load', () => {
-	const electronWindow = window as TwineElectronWindow;
+	const electronWindow = globalThis as unknown as TwineElectronWindow;
 
 	function mockLoadPrefs(data: any) {
 		Object.assign(electronWindow, {

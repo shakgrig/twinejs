@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconReplace} from '@tabler/icons';
+import {IconReplace} from '@tabler/icons-react';
 import debounce from 'lodash/debounce';
 import {useTranslation} from 'react-i18next';
 import {DialogCard} from '../components/container/dialog-card';

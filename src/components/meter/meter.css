@@ -1,6 +1,16 @@
 @import '../../styles/colors.css';
 @import '../../styles/metrics.css';
 
+.meter .meter-native {
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	height: 1px;
+	overflow: hidden;
+	position: absolute;
+	white-space: nowrap;
+	width: 1px;
+}
+
 .meter .meter-bar {
 	background: transparent;
 	border: 1px solid var(--light-gray);

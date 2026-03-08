@@ -48,7 +48,7 @@ describe('Story reducer deletePassage action handler', () => {
 
 	it('issues a warning and makes no changes if there is no story in state with the ID requested', () => {
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 		expect(deletePassage([story], story.id + 'wrong', passage.id)).toEqual([
 			story
@@ -59,7 +59,7 @@ describe('Story reducer deletePassage action handler', () => {
 	it('issues a warning and makes no changes if there is no passage in state with the ID requested', () => {
 		const story = fakeStory();
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 		expect(deletePassage([story], story.id, passage.id + 'wrong')).toEqual([
 			story

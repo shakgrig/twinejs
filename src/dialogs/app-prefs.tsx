@@ -56,7 +56,7 @@ export const AppPrefsDialog: React.FC<
 				</TextSelect>
 				<TextSelect
 					onChange={e =>
-						dispatch(setPref('dialogWidth', parseInt(e.target.value)))
+						dispatch(setPref('dialogWidth', Number.parseInt(e.target.value)))
 					}
 					options={[
 						{label: t('dialogs.appPrefs.dialogWidths.default'), value: '600'},

@@ -77,13 +77,13 @@ describe('movePassages action creator', () => {
 
 	it('throws an error if either offset is not a finite number', () => {
 		expect(() =>
-			movePassages(story, [passage0.id, passage2.id], NaN, 0)
+			movePassages(story, [passage0.id, passage2.id], Number.NaN, 0)
 		).toThrow();
 		expect(() =>
-			movePassages(story, [passage0.id, passage2.id], 0, NaN)
+			movePassages(story, [passage0.id, passage2.id], 0, Number.NaN)
 		).toThrow();
 		expect(() =>
-			movePassages(story, [passage0.id, passage2.id], NaN, NaN)
+			movePassages(story, [passage0.id, passage2.id], Number.NaN, Number.NaN)
 		).toThrow();
 		expect(() =>
 			movePassages(story, [passage0.id, passage2.id], Infinity, 0)

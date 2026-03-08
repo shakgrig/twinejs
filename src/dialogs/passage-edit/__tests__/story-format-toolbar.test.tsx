@@ -182,7 +182,7 @@ describe('<StoryFormatToolbar>', () => {
 		renderComponent();
 		useFormatToolbarMock.mockClear();
 		fireEvent.click(screen.getByRole('button'));
-		await waitFor(() => expect(useFormatToolbarMock).toBeCalledTimes(1));
+		await waitFor(() => expect(useFormatToolbarMock).toHaveBeenCalledTimes(1));
 	});
 
 	it('is accessible', async () => {

@@ -7,13 +7,13 @@ import {IconEmpty} from '../image/icon';
 import {IconButton, IconButtonProps} from './icon-button';
 import './menu-button.css';
 import {CheckboxButton} from './checkbox-button';
-import {IconCheck} from '@tabler/icons';
+import {IconCheck} from '@tabler/icons-react';
 
 export interface UncheckableLabeledMenuItem {
 	disabled?: boolean;
 	label: string;
 	onClick: () => void;
-	separator?: undefined;
+	separator?: never;
 	variant?: IconButtonProps['variant'];
 }
 
@@ -42,6 +42,14 @@ export const MenuButton: React.FC<MenuButtonProps> = props => {
 	const [menuEl, setMenuEl] = React.useState<HTMLDivElement | null>(null);
 	const [open, setOpen] = React.useState(false);
 	const {styles, attributes} = usePopper(buttonEl, menuEl, {strategy: 'fixed'});
+	const keyCounts = new Map<string, number>();
+
+	function keyFor(base: string) {
+		const count = (keyCounts.get(base) ?? 0) + 1;
+
+		keyCounts.set(base, count);
+		return `${base}-${count}`;
+	}
 
 	React.useEffect(() => {
 		const closer = () => setOpen(false);
@@ -75,16 +83,21 @@ export const MenuButton: React.FC<MenuButtonProps> = props => {
 				>
 					<ButtonCard floating>
 						<ButtonBar orientation="vertical">
-							{items.map((item, index) => {
+							{items.map(item => {
 								if (item.separator) {
-									return <ButtonBarSeparator key={index} />;
+									return <ButtonBarSeparator key={keyFor('separator')} />;
 								}
+
+								const itemType = 'checkable' in item ? 'checkable' : item.variant;
+								const itemKey = keyFor(
+									`${itemType}-${item.label}-${item.disabled ? 'disabled' : 'enabled'}`
+								);
 
 								return 'checkable' in item ? (
 									<CheckboxButton
 										checkedIcon={<IconCheck />}
 										disabled={item.disabled}
-										key={index}
+										key={itemKey}
 										label={item.label}
 										onChange={item.onClick}
 										uncheckedIcon={<IconEmpty />}
@@ -94,7 +107,7 @@ export const MenuButton: React.FC<MenuButtonProps> = props => {
 									<IconButton
 										disabled={item.disabled}
 										icon={<IconEmpty />}
-										key={index}
+										key={itemKey}
 										label={item.label}
 										onClick={item.onClick}
 										variant={item.variant}

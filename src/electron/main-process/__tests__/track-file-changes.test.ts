@@ -46,7 +46,7 @@ describe('wasFileChangedExternally()', () => {
 	});
 
 	it('rejects if statting the file fails', async () => {
-		const mockError = new Error();
+		const mockError = new Error('Mock stat failure');
 
 		await fileWasTouched('test-file');
 		statMock.mockRejectedValue(mockError);

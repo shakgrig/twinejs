@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {renderHook} from '@testing-library/react-hooks';
+import {renderHook} from '@testing-library/react';
 import {fakePrefs} from '../../../test-util';
 import {PrefsContext, PrefsState} from '..';
 import {useComputedTheme} from '../use-computed-theme';
@@ -20,13 +20,19 @@ describe('useComputedTheme()', () => {
 		});
 	}
 
-	const darkQueryMock = {addEventListener: jest.fn(), matches: true};
+	const darkQueryMock = {
+		addEventListener: jest.fn(),
+		matches: true,
+		removeEventListener: jest.fn()
+	};
 
 	// jsdom doesn't implement window.matchMedia, but TS knows about it, so we
 	// have to do some hacky stuff here.
 
-	beforeEach(() => ((window as any).matchMedia = jest.fn(() => darkQueryMock)));
-	afterEach(() => delete (window as any).matchMedia);
+	beforeEach(
+		() => ((globalThis as any).matchMedia = jest.fn(() => darkQueryMock))
+	);
+	afterEach(() => delete (globalThis as any).matchMedia);
 
 	it('returns the preference if it is dark or light', () => {
 		expect(renderWithPrefs({appTheme: 'dark'}).result.current).toBe('dark');

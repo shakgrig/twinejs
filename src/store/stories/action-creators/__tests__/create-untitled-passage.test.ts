@@ -86,8 +86,8 @@ describe('createUntitledPassage', () => {
 	it.todo('snaps the passage to the grid is the story has grid snapping on');
 
 	it('throws an error if either position is NaN', () => {
-		expect(() => createUntitledPassage(story, NaN, 0)).toThrow();
-		expect(() => createUntitledPassage(story, 0, NaN)).toThrow();
+		expect(() => createUntitledPassage(story, Number.NaN, 0)).toThrow();
+		expect(() => createUntitledPassage(story, 0, Number.NaN)).toThrow();
 		expect(() => createUntitledPassage(story, Infinity, 0)).toThrow();
 		expect(() => createUntitledPassage(story, 0, Infinity)).toThrow();
 	});

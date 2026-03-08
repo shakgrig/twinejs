@@ -4,9 +4,9 @@ import {
 	IconPlayerPlay,
 	IconTool,
 	IconX
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import * as React from 'react';
-import {useTranslation} from 'react-i18next/';
+import {useTranslation} from 'react-i18next';
 import {ButtonBar} from '../components/container/button-bar';
 import {CardContent} from '../components/container/card';
 import {CardButton} from '../components/control/card-button';

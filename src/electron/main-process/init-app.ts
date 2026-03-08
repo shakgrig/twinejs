@@ -1,5 +1,5 @@
 import {app, BrowserWindow, dialog, screen, shell} from 'electron';
-import path from 'path';
+import path from 'node:path';
 import {initIpc} from './ipc';
 import {initLocales} from './locales';
 import {initMenuBar} from './menu-bar';

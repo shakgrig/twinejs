@@ -2,6 +2,27 @@ import {PrefsAction, PrefsState} from './prefs.types';
 import {defaults} from './defaults';
 import {formatWithNameAndVersion, newestFormatNamed} from '../story-formats';
 
+function describeValue(value: unknown) {
+	if (typeof value === 'string') {
+		return `"${value}"`;
+	}
+
+	if (
+		typeof value === 'number' ||
+		typeof value === 'boolean' ||
+		value === null ||
+		value === undefined
+	) {
+		return String(value);
+	}
+
+	try {
+		return JSON.stringify(value);
+	} catch {
+		return '[unserializable-object]';
+	}
+}
+
 export const reducer: React.Reducer<PrefsState, PrefsAction> = (
 	state,
 	action
@@ -24,8 +45,10 @@ export const reducer: React.Reducer<PrefsState, PrefsAction> = (
 						typeof value !== typeof state[prefKey]
 					) {
 						console.info(
-							`Repairing preference "${key}" by setting it to ${value}, ` +
-								`was ${state[prefKey]} (bad type)`
+							`Repairing preference "${key}" by setting it to ${describeValue(
+								value
+							)}, ` +
+								`was ${describeValue(state[prefKey])} (bad type)`
 						);
 						return {...result, [prefKey]: value};
 					}

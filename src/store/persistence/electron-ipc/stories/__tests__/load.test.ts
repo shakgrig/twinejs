@@ -5,7 +5,7 @@ import {fakeAppInfo, fakeStory} from '../../../../../test-util';
 import {publishStory} from '../../../../../util/publish';
 
 describe('stories Electron IPC load', () => {
-	const electronWindow = window as TwineElectronWindow;
+	const electronWindow = globalThis as unknown as TwineElectronWindow;
 	let stories: Story[];
 	let storydata: any[];
 

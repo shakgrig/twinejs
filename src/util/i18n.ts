@@ -10,7 +10,8 @@ i18n
 	.init({
 		debug: process.env.NODE_ENV === 'development',
 		backend: {loadPath: `${import.meta.env.BASE_URL}locales/{{lng}}.json`},
-		fallbackLng: 'en-us',
+		compatibilityJSON: 'v4',
+		fallbackLng: 'en-US',
 		interpolation: {
 			escapeValue: false
 		},

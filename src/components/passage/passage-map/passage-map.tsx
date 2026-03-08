@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {DraggableData} from 'react-draggable';
+import {DraggableData, DraggableEvent} from 'react-draggable';
 import {Passage, Story} from '../../../store/stories';
 import {boundingRect, Point} from '../../../util/geometry';
 import {PassageConnections} from '../passage-connections';
@@ -157,12 +157,12 @@ export const PassageMap: React.FC<PassageMapProps> = props => {
 		);
 	}, [state.dragX, state.dragY, state.startX, state.startY, visibleZoom]);
 
-	const handleDragStart = React.useCallback((event, data: DraggableData) => {
+	const handleDragStart = React.useCallback((event: DraggableEvent, data: DraggableData) => {
 		document.body.classList.add('dragging-passages');
 		dispatch({type: 'start', x: data.x, y: data.y});
 	}, []);
 	const handleDrag = React.useCallback(
-		(event, data: DraggableData) =>
+		(event: DraggableEvent, data: DraggableData) =>
 			dispatch({type: 'move', x: data.x, y: data.y}),
 		[]
 	);
@@ -179,7 +179,7 @@ export const PassageMap: React.FC<PassageMapProps> = props => {
 		// https://github.com/klembot/twinejs/issues/1426
 
 		recentlyDragging.current = true;
-		window.setTimeout(() => {
+		globalThis.setTimeout(() => {
 			recentlyDragging.current = false;
 		}, 0);
 	}, [onDrag]);

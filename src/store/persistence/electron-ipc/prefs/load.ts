@@ -3,7 +3,7 @@ import {TwineElectronWindow} from '../../../../electron/shared';
 import {defaults} from '../../../prefs/defaults';
 
 export async function load(): Promise<Partial<PrefsState>> {
-	const {twineElectron} = window as TwineElectronWindow;
+	const {twineElectron} = globalThis as unknown as TwineElectronWindow;
 	const result: Partial<PrefsState> = {};
 	const prefKeys = Object.keys(defaults());
 

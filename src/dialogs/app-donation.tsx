@@ -1,4 +1,4 @@
-import {IconHeart, IconX} from '@tabler/icons';
+import {IconHeart, IconX} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
 import {ButtonBar} from '../components/container/button-bar';

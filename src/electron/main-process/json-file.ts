@@ -3,7 +3,7 @@
 
 import {app} from 'electron';
 import {readJson, readJsonSync, writeJson} from 'fs-extra';
-import {join} from 'path';
+import {join} from 'node:path';
 
 /**
  * Returns a promise resolving to the contents of a JSON file in the app data

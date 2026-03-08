@@ -38,7 +38,7 @@ describe('<RouteToolbar>', () => {
 
 	it('displays a help button that opens the URL given in helpUrl prop in a new tab', () => {
 		const openSpy = jest
-			.spyOn(window, 'open')
+			.spyOn(globalThis, 'open')
 			.mockReturnValue(undefined as any);
 
 		renderComponent({helpUrl: 'mock-help-url'});

@@ -41,7 +41,9 @@ export const PassageText: React.FC<PassageTextProps> = props => {
 	// importantly, no React effects fire.
 
 	const onChangeText = React.useRef<string>();
-	const onChangeTimeout = React.useRef<number>();
+	const onChangeTimeout = React.useRef<
+		ReturnType<typeof globalThis.setTimeout>
+	>();
 
 	// Effects to handle debouncing updates upward. The idea here is that the
 	// component maintains a local state so that the CodeMirror instance always is
@@ -69,7 +71,7 @@ export const PassageText: React.FC<PassageTextProps> = props => {
 			// If there was a pending update, cancel it.
 
 			if (onChangeTimeout.current) {
-				window.clearTimeout(onChangeTimeout.current);
+				globalThis.clearTimeout(onChangeTimeout.current);
 			}
 
 			// Save the text value in case we need to reset the timeout in the next
@@ -79,7 +81,7 @@ export const PassageText: React.FC<PassageTextProps> = props => {
 
 			// Queue a call to onChange.
 
-			onChangeTimeout.current = window.setTimeout(() => {
+			onChangeTimeout.current = globalThis.setTimeout(() => {
 				// Important to reset this ref so that we don't try to cancel fired
 				// timeouts above.
 
@@ -98,8 +100,8 @@ export const PassageText: React.FC<PassageTextProps> = props => {
 
 	React.useEffect(() => {
 		if (onChangeTimeout.current) {
-			window.clearTimeout(onChangeTimeout.current);
-			onChangeTimeout.current = window.setTimeout(() => {
+			globalThis.clearTimeout(onChangeTimeout.current);
+			onChangeTimeout.current = globalThis.setTimeout(() => {
 				// This body must be the same as in the timeout in the previous effect.
 
 				onChangeTimeout.current = undefined;
@@ -116,7 +118,7 @@ export const PassageText: React.FC<PassageTextProps> = props => {
 			// animation seems to mess up CodeMirror's cursor rendering. The delay below
 			// is intended to run after the animation completes.
 
-			window.setTimeout(() => {
+			globalThis.setTimeout(() => {
 				editor.focus();
 				editor.refresh();
 			}, 400);
@@ -150,7 +152,7 @@ export const PassageText: React.FC<PassageTextProps> = props => {
 				prefixes: ['[[', '->']
 			},
 			// This value prevents the area from being focused.
-			readOnly: disabled ? 'nocursor' : false
+			readOnly: disabled ? ('nocursor' as const) : false
 		}),
 		[
 			autocompletePassageNames,

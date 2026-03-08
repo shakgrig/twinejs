@@ -81,7 +81,7 @@ describe('Pref reducer', () => {
 				})
 			).toEqual(expect.objectContaining({donateShown: defs.donateShown})));
 
-		it.each([NaN, Infinity])('replaces a %d with a number', value => {
+		it.each([Number.NaN, Infinity])('replaces a %d with a number', value => {
 			const result = reducer({...defs, firstRunTime: value} as any, {
 				allFormats,
 				type: 'repair'

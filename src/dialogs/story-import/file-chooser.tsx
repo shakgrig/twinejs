@@ -14,7 +14,7 @@ export const FileChooser: React.FC<FileChooserProps> = props => {
 	const {t} = useTranslation();
 
 	function handleChange(file: File, data: string) {
-		if (/\.html$/.test(file.name)) {
+		if (file.name.endsWith('.html')) {
 			onChange(file, importStories(data));
 		} else {
 			onChange(file, [storyFromTwee(data)]);

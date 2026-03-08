@@ -7,5 +7,5 @@ import {Story} from '../../store/stories/stories.types';
  * with the addition of spaces, for legibility.
  */
 export function storyFileName(story: Story, extension = '.html') {
-	return story.name.replace(/[^\w. -]/g, '_') + extension;
+	return story.name.replaceAll(/[^\w. -]/g, '_') + extension;
 }

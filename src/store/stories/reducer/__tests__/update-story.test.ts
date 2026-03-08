@@ -37,7 +37,7 @@ describe('Story reducer updateStory action handler', () => {
 		const story2 = fakeStory();
 		const state = [story1, story2];
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(updateStory(state, story1.id, {name: story2.name})).toBe(state);
@@ -49,7 +49,7 @@ describe('Story reducer updateStory action handler', () => {
 		const story2 = fakeStory();
 		const state = [story1, story2];
 		const warnSpy = jest
-			.spyOn(global.console, 'warn')
+			.spyOn(globalThis.console, 'warn')
 			.mockImplementation(() => {});
 
 		expect(

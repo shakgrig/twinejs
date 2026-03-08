@@ -12,7 +12,7 @@ export function movePassages(
 	const passageUpdates: Record<string, Partial<Passage>> = {};
 
 	if (!Number.isFinite(xChange) || !Number.isFinite(yChange)) {
-		throw new Error('Offset must be a finite number.');
+		throw new TypeError('Offset must be a finite number.');
 	}
 
 	passageIds.forEach(passageId => {

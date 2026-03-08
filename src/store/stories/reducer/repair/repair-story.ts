@@ -5,6 +5,27 @@ import {storyDefaults} from '../../defaults';
 import {StoryFormat} from '../../../story-formats';
 import {repairPassage} from './repair-passage';
 
+function describeValue(value: unknown) {
+	if (typeof value === 'string') {
+		return `"${value}"`;
+	}
+
+	if (
+		typeof value === 'number' ||
+		typeof value === 'boolean' ||
+		value === null ||
+		value === undefined
+	) {
+		return String(value);
+	}
+
+	try {
+		return JSON.stringify(value);
+	} catch {
+		return '[unserializable-object]';
+	}
+}
+
 function logRepair(
 	story: Story,
 	propName: keyof Story,
@@ -13,7 +34,9 @@ function logRepair(
 ) {
 	let message =
 		`Repairing story (name: "${story.name}", id: ${story.id}) by ` +
-		`setting ${propName} to ${repairedValue}, was ${story[propName]}`;
+		`setting ${propName} to ${describeValue(repairedValue)}, was ${describeValue(
+			story[propName]
+		)}`;
 
 	if (detail) {
 		message += ` (${detail})`;

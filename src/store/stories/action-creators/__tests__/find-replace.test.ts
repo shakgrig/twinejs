@@ -56,7 +56,7 @@ describe('passageReplaceError', () => {
 		story.passages[0].name = 'a';
 		story.passages[1].name = 'a1';
 		expect(
-			passageReplaceError(story.passages, '\\d', '', {
+			passageReplaceError(story.passages, String.raw`\d`, '', {
 				includePassageNames: true,
 				useRegexes: true
 			})
@@ -134,7 +134,7 @@ describe('replaceInPassage', () => {
 			{includePassageNames: true, matchCase: true},
 			{name: 'A*YyZz', text: 'A*BbCc'}
 		],
-		['\\w', '*', {useRegexes: true}, {text: '******'}],
+		[String.raw`\w`, '*', {useRegexes: true}, {text: '******'}],
 		['a.', '*', {matchCase: true, useRegexes: true}, {text: 'A*bCc'}],
 		[
 			'a.',
@@ -165,7 +165,6 @@ describe('replaceInPassage', () => {
 				// Tests here are loose because passage text updates trigger other
 				// potential dispatches (e.g. to add newly-linked passages).
 
-				// eslint-disable-next-line jest/no-conditional-expect
 				expect(dispatch).toHaveBeenCalledWith({
 					props,
 					type: 'updatePassage',
@@ -173,7 +172,6 @@ describe('replaceInPassage', () => {
 					storyId: story.id
 				});
 			} else {
-				// eslint-disable-next-line jest/no-conditional-expect
 				expect(dispatch).not.toHaveBeenCalled();
 			}
 		}
@@ -230,7 +228,7 @@ describe('replaceInStory', () => {
 				[{name: 'A*WwXx'}, {text: 'A*DdEe'}]
 			]
 		],
-		['\\w', '*', {useRegexes: true}, [[{text: '******'}], [{text: '******'}]]],
+		[String.raw`\w`, '*', {useRegexes: true}, [[{text: '******'}], [{text: '******'}]]],
 		[
 			'a.',
 			'*',
@@ -265,7 +263,6 @@ describe('replaceInStory', () => {
 				// potential dispatches (e.g. to add newly-linked passages).
 
 				for (const props of passageChanges[0]) {
-					// eslint-disable-next-line jest/no-conditional-expect
 					expect(dispatch).toHaveBeenCalledWith({
 						props,
 						type: 'updatePassage',
@@ -276,7 +273,6 @@ describe('replaceInStory', () => {
 
 				if (passageChanges.length > 1) {
 					for (const props of passageChanges[1]) {
-						// eslint-disable-next-line jest/no-conditional-expect
 						expect(dispatch).toHaveBeenCalledWith({
 							props,
 							type: 'updatePassage',
@@ -286,7 +282,6 @@ describe('replaceInStory', () => {
 					}
 				}
 			} else {
-				// eslint-disable-next-line jest/no-conditional-expect
 				expect(dispatch).not.toHaveBeenCalled();
 			}
 		}

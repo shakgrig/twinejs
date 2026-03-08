@@ -22,7 +22,7 @@ const removeSetters = (link: string) => {
 };
 
 const removeEnclosingBrackets = (link: string) =>
-	link.substr(2, link.length - 4);
+	link.slice(2, -2);
 
 /**
  * Split the link by the separator and return the field in the given index.

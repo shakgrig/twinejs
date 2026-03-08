@@ -23,7 +23,9 @@ export const Tooltip: React.FC<TooltipProps> = props => {
 	const [tooltipEl, setTooltipEl] = React.useState<HTMLDivElement | null>(null);
 	const [arrowEl, setArrowEl] = React.useState<HTMLDivElement | null>(null);
 	const [visible, setVisible] = React.useState(false);
-	const [appearTimeout, setAppearTimeout] = React.useState<number>();
+	const [appearTimeout, setAppearTimeout] = React.useState<
+		ReturnType<typeof globalThis.setTimeout>
+	>();
 	const {styles, attributes} = usePopper(anchor, tooltipEl, {
 		modifiers: [{name: 'arrow', options: {element: arrowEl}}, {name: 'flip'}],
 		placement: position,
@@ -32,10 +34,10 @@ export const Tooltip: React.FC<TooltipProps> = props => {
 
 	React.useEffect(() => {
 		const handleOnEnter = () =>
-			setAppearTimeout(window.setTimeout(() => setVisible(true), 500));
+			setAppearTimeout(globalThis.setTimeout(() => setVisible(true), 500));
 		const handleOnLeave = () => {
 			if (appearTimeout) {
-				window.clearTimeout(appearTimeout);
+				globalThis.clearTimeout(appearTimeout);
 			}
 
 			setVisible(false);

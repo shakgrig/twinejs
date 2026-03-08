@@ -1,25 +1,25 @@
 import * as React from 'react';
-import {renderHook} from '@testing-library/react-hooks';
+import {renderHook} from '@testing-library/react';
 import {donationDelay, useDonationCheck} from '../use-donation-check';
 import {PrefsContext, PrefsState} from '..';
 import {fakePrefs} from '../../../test-util';
 
-describe('useDonationCheck', () => {
-	function renderWithPrefs(prefs: Partial<PrefsState>) {
-		return renderHook(() => useDonationCheck(), {
-			wrapper: ({children}) => (
-				<PrefsContext.Provider
-					value={{
-						dispatch: jest.fn(),
-						prefs: {...fakePrefs(), ...prefs}
-					}}
-				>
-					{children}
-				</PrefsContext.Provider>
-			)
-		});
-	}
+function renderWithPrefs(prefs: Partial<PrefsState>) {
+	return renderHook(() => useDonationCheck(), {
+		wrapper: ({children}) => (
+			<PrefsContext.Provider
+				value={{
+					dispatch: jest.fn(),
+					prefs: {...fakePrefs(), ...prefs}
+				}}
+			>
+				{children}
+			</PrefsContext.Provider>
+		)
+	});
+}
 
+describe('useDonationCheck', () => {
 	it('returns false if the donateShown preference is true', () =>
 		expect(
 			renderWithPrefs({

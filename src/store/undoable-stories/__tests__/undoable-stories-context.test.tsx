@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {act, renderHook} from '@testing-library/react-hooks';
+import {act, renderHook} from '@testing-library/react';
 import {
 	UndoableStoriesContextProvider,
 	useUndoableStoriesContext
@@ -17,24 +17,29 @@ jest.mock('../reverse-action');
 
 interface WrapperProps {
 	dispatch?: jest.Mock;
-	storiesContext: Partial<StoriesContextProps>;
+	storiesContext?: Partial<StoriesContextProps>;
 }
 
-const wrapper: React.FC<WrapperProps> = ({
-	children,
+const makeWrapper = ({
 	dispatch = jest.fn(),
-	storiesContext
-}) => (
-	<StoriesContext.Provider
-		value={{
-			dispatch,
-			stories: [],
-			...storiesContext
-		}}
-	>
-		<UndoableStoriesContextProvider>{children}</UndoableStoriesContextProvider>
-	</StoriesContext.Provider>
-);
+	storiesContext = {}
+}: WrapperProps = {}): React.FC<React.PropsWithChildren> =>
+	({children}) => {
+		const value = React.useMemo(
+			() => ({
+				dispatch,
+				stories: [],
+				...storiesContext
+			}),
+			[dispatch, storiesContext]
+		);
+
+		return (
+			<StoriesContext.Provider value={value}>
+				<UndoableStoriesContextProvider>{children}</UndoableStoriesContextProvider>
+			</StoriesContext.Provider>
+		);
+	};
 
 describe('<UndoableStoriesContextProvider>', () => {
 	const reducerMock = reducer as jest.Mock;
@@ -42,8 +47,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 	it('passes through stories from its parent StoriesContext', () => {
 		const stories = [fakeStory()];
 		const {result} = renderHook(() => useUndoableStoriesContext(), {
-			initialProps: {storiesContext: {stories}},
-			wrapper
+			wrapper: makeWrapper({storiesContext: {stories}})
 		});
 
 		expect(result.current.stories).toBe(stories);
@@ -54,13 +58,12 @@ describe('<UndoableStoriesContextProvider>', () => {
 			const dispatch = jest.fn();
 			const stories = [fakeStory()];
 			const {result} = renderHook(() => useUndoableStoriesContext(), {
-				initialProps: {storiesContext: {dispatch, stories}},
-				wrapper
+				wrapper: makeWrapper({storiesContext: {dispatch, stories}})
 			});
 
 			expect(result.current.stories).toBe(stories);
 			act(() => result.current.dispatch({type: 'init', state: []}));
-			expect(dispatch).toBeCalledTimes(1);
+			expect(dispatch).toHaveBeenCalledTimes(1);
 		});
 
 		it('sends an addChange action to the undoableStories reducer if a description is passed', () => {
@@ -68,8 +71,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 			const stories = [fakeStory()];
 			const mockAction: StoriesAction = {type: 'init', state: []};
 			const {result} = renderHook(() => useUndoableStoriesContext(), {
-				initialProps: {storiesContext: {dispatch, stories}},
-				wrapper
+				wrapper: makeWrapper({storiesContext: {dispatch, stories}})
 			});
 
 			act(() => result.current.dispatch(mockAction, 'mock-description'));
@@ -91,8 +93,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 			const stories = [fakeStory()];
 			const mockAction: StoriesAction = {type: 'init', state: []};
 			const {result} = renderHook(() => useUndoableStoriesContext(), {
-				initialProps: {storiesContext: {dispatch, stories}},
-				wrapper
+				wrapper: makeWrapper({storiesContext: {dispatch, stories}})
 			});
 
 			act(() => result.current.dispatch(mockAction));
@@ -114,7 +115,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 		it.todo("doesn't exist if there isn't a change later than the current one");
 	});
 
-	fdescribe('its undo function', () => {
+	describe('its undo function', () => {
 		const dispatch = jest.fn();
 		const stories = [fakeStory()];
 		const redo = {type: 'init', state: {}};
@@ -129,8 +130,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 
 		it('exists if there is a current change', () => {
 			const {result} = renderHook(() => useUndoableStoriesContext(), {
-				initialProps: {storiesContext: {dispatch, stories}},
-				wrapper
+				wrapper: makeWrapper({storiesContext: {dispatch, stories}})
 			});
 
 			// This change doesn't matter-- the mock reducer supplies the state.
@@ -143,8 +143,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 
 		it('dispatches the undo action of the current change', () => {
 			const {result} = renderHook(() => useUndoableStoriesContext(), {
-				initialProps: {storiesContext: {dispatch, stories}},
-				wrapper
+				wrapper: makeWrapper({storiesContext: {dispatch, stories}})
 			});
 
 			// This change doesn't matter-- the mock reducer supplies the state.
@@ -168,8 +167,7 @@ describe('<UndoableStoriesContextProvider>', () => {
 			}));
 
 			const {result} = renderHook(() => useUndoableStoriesContext(), {
-				initialProps: {storiesContext: {dispatch, stories}},
-				wrapper
+				wrapper: makeWrapper({storiesContext: {dispatch, stories}})
 			});
 
 			// This change doesn't matter-- the mock reducer supplies the state.

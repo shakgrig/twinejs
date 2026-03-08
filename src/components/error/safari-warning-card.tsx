@@ -1,7 +1,7 @@
-import {IconInfoCircle} from '@tabler/icons';
+import {IconInfoCircle} from '@tabler/icons-react';
 import * as React from 'react';
 import {useTranslation} from 'react-i18next';
-import UAParser from 'ua-parser-js';
+import {UAParser} from 'ua-parser-js';
 import {ButtonBar} from '../container/button-bar';
 import {Card} from '../container/card';
 import {IconLink} from '../control/icon-link';
@@ -21,14 +21,14 @@ export const SafariWarningCard: React.FC = () => {
 	}
 
 	if (browser.version) {
-		const version = parseInt(browser.version.replace(/\..*/, ''));
+		const version = Number.parseInt(browser.version.replace(/\..*/, ''));
 
 		if (Number.isFinite(version) && version < 13) {
 			return null;
 		}
 	}
 
-	const safariNavigator = window.navigator as SafariNavigator;
+	const safariNavigator = globalThis.navigator as SafariNavigator;
 
 	if (safariNavigator.standalone) {
 		// We are in "standalone" or full-screen mode. This is supposed to have

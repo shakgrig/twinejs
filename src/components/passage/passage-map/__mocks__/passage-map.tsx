@@ -10,8 +10,7 @@ export const PassageMap: React.FC<Partial<PassageMapProps>> = props => (
 		data-visible-zoom={props.visibleZoom}
 		data-zoom={props.zoom}
 	>
-		{props.passages &&
-			props.passages.map(passage => (
+		{props.passages?.map(passage => (
 				<div
 					data-testid={`mock-passage-${passage.id}`}
 					data-selected={passage.selected}

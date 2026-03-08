@@ -10,6 +10,7 @@ import {
 
 export interface FormatLoaderProps {
 	block?: boolean;
+	children?: React.ReactNode;
 }
 
 export const FormatLoader: React.FC<FormatLoaderProps> = ({
@@ -26,7 +27,7 @@ export const FormatLoader: React.FC<FormatLoaderProps> = ({
 	React.useEffect(() => {
 		const newFormats = formats.filter(
 			newFormat =>
-				!seenFormats.find(
+				!seenFormats.some(
 					oldFormat =>
 						oldFormat.name === newFormat.name &&
 						oldFormat.version === newFormat.version

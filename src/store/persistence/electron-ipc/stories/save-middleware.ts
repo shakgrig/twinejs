@@ -29,7 +29,7 @@ export function saveMiddleware(
 	action: StoriesAction,
 	formats: StoryFormatsState
 ) {
-	const {twineElectron} = window as TwineElectronWindow;
+	const {twineElectron} = globalThis as unknown as TwineElectronWindow;
 
 	if (!twineElectron) {
 		throw new Error('Electron bridge is not present on window.');

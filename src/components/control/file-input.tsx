@@ -19,27 +19,28 @@ export const FileInput: React.FC<FileInputProps> = props => {
 		`orientation-${orientation ?? 'horizontal'}`
 	);
 
-	function handleChange(changeEvent: React.ChangeEvent<HTMLInputElement>) {
+	async function handleChange(
+		changeEvent: React.ChangeEvent<HTMLInputElement>
+	) {
 		if (!changeEvent.target.files) {
 			throw new Error('Change event occurred but no files present');
 		}
 
 		const file = changeEvent.target.files[0];
-		const reader = new FileReader();
 
-		reader.addEventListener('loadend', () => {
-			if (reader.error) {
-				console.warn(reader.error);
+		try {
+			onChange(file, await file.text());
+		} catch (error) {
+			console.warn(error);
 
-				if (onError) {
-					onError(reader.error);
-				}
-			} else {
-				onChange(file, reader.result as string);
+			if (onError) {
+				onError(
+					error instanceof Error
+						? error
+						: new Error('An unknown error occurred while reading a file')
+				);
 			}
-		});
-
-		reader.readAsText(file);
+		}
 	}
 
 	return (

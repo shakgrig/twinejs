@@ -4,7 +4,7 @@ import {TextInput} from './text-input';
 import {TextSelect} from './text-select';
 import './font-select.css';
 
-const families = ['var(--font-monospaced)', 'var(--font-system)'];
+const families = new Set(['var(--font-monospaced)', 'var(--font-system)']);
 const scales = [0.8, 0.9, 1, 1.25, 1.5, 2];
 
 export interface FontSelectProps {
@@ -29,7 +29,7 @@ export const FontSelect: React.FC<FontSelectProps> = props => {
 		!scales.includes(fontScale)
 	);
 	const [customFamilyVisible, setCustomFamilyVisible] = React.useState(
-		!families.includes(fontFamily)
+		!families.has(fontFamily)
 	);
 	const [customFamily, setCustomFamily] = React.useState(fontFamily);
 	const [customScale, setCustomScale] = React.useState(
@@ -40,7 +40,7 @@ export const FontSelect: React.FC<FontSelectProps> = props => {
 	function handleFamilyChange(event: React.ChangeEvent<HTMLSelectElement>) {
 		if (event.target.value === 'custom') {
 			setCustomFamilyVisible(true);
-			if (families.includes(customFamily)) {
+			if (families.has(customFamily)) {
 				setCustomFamily('');
 			}
 		} else {
@@ -54,7 +54,7 @@ export const FontSelect: React.FC<FontSelectProps> = props => {
 			setCustomScaleVisible(true);
 		} else {
 			setCustomScaleVisible(false);
-			onChangeScale(parseFloat(event.target.value));
+			onChangeScale(Number.parseFloat(event.target.value));
 		}
 	}
 
@@ -71,7 +71,7 @@ export const FontSelect: React.FC<FontSelectProps> = props => {
 	function handleCustomScaleChange(event: React.ChangeEvent<HTMLInputElement>) {
 		setCustomScale(event.target.value);
 
-		const value = parseInt(event.target.value);
+		const value = Number.parseInt(event.target.value);
 
 		if (Number.isFinite(value)) {
 			onChangeScale(value / 100);

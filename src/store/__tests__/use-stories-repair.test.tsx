@@ -1,10 +1,45 @@
 import * as React from 'react';
-import {renderHook} from '@testing-library/react-hooks';
+import {renderHook} from '@testing-library/react';
 import {fakePrefs, fakeUnloadedStoryFormat} from '../../test-util';
 import {defaults, PrefsContext} from '../prefs';
 import {StoriesContext} from '../stories';
 import {StoryFormatsContext} from '../story-formats';
 import {useStoriesRepair} from '../use-stories-repair';
+
+interface WrapperOptions {
+	allFormats: ReturnType<typeof fakeUnloadedStoryFormat>[];
+	dispatch: jest.Mock;
+	prefs: ReturnType<typeof fakePrefs>;
+}
+
+function makeWrapper({allFormats, dispatch, prefs}: WrapperOptions) {
+	return ({children}: {children: React.ReactNode}) => {
+		const prefsDispatch = React.useMemo(() => jest.fn(), []);
+		const storyFormatsDispatch = React.useMemo(() => jest.fn(), []);
+		const storiesContextValue = React.useMemo(
+			() => ({dispatch, stories: []}),
+			[dispatch]
+		);
+		const prefsContextValue = React.useMemo(
+			() => ({prefs, dispatch: prefsDispatch}),
+			[prefs, prefsDispatch]
+		);
+		const storyFormatsContextValue = React.useMemo(
+			() => ({dispatch: storyFormatsDispatch, formats: allFormats}),
+			[allFormats, storyFormatsDispatch]
+		);
+
+		return (
+			<StoriesContext.Provider value={storiesContextValue}>
+				<PrefsContext.Provider value={prefsContextValue}>
+					<StoryFormatsContext.Provider value={storyFormatsContextValue}>
+						{children}
+					</StoryFormatsContext.Provider>
+				</PrefsContext.Provider>
+			</StoriesContext.Provider>
+		);
+	};
+}
 
 describe('useStoriesRepair', () => {
 	it('returns a function which dispatches a repair action with the default format and all formats', () => {
@@ -14,20 +49,7 @@ describe('useStoriesRepair', () => {
 		const prefs = fakePrefs({
 			storyFormat: {name: format.name, version: format.version}
 		});
-		const wrapper = ({children}: {children: React.ReactChild}) => (
-			<StoriesContext.Provider value={{dispatch, stories: []}}>
-				<PrefsContext.Provider value={{prefs, dispatch: jest.fn()}}>
-					<StoryFormatsContext.Provider
-						value={{
-							dispatch: jest.fn(),
-							formats: allFormats
-						}}
-					>
-						{children}
-					</StoryFormatsContext.Provider>
-				</PrefsContext.Provider>
-			</StoriesContext.Provider>
-		);
+		const wrapper = makeWrapper({allFormats, dispatch, prefs});
 		const {result} = renderHook(() => useStoriesRepair(), {wrapper});
 
 		result.current();
@@ -56,20 +78,7 @@ describe('useStoriesRepair', () => {
 			}
 		});
 		const allFormats = [defaultFormat, fakeUnloadedStoryFormat()];
-		const wrapper = ({children}: {children: React.ReactChild}) => (
-			<StoriesContext.Provider value={{dispatch, stories: []}}>
-				<PrefsContext.Provider value={{prefs, dispatch: jest.fn()}}>
-					<StoryFormatsContext.Provider
-						value={{
-							dispatch: jest.fn(),
-							formats: allFormats
-						}}
-					>
-						{children}
-					</StoryFormatsContext.Provider>
-				</PrefsContext.Provider>
-			</StoriesContext.Provider>
-		);
+		const wrapper = makeWrapper({allFormats, dispatch, prefs});
 
 		const {result} = renderHook(() => useStoriesRepair(), {wrapper});
 
@@ -94,25 +103,12 @@ describe('useStoriesRepair', () => {
 				version: '1.0.0'
 			}
 		});
-		const wrapper = ({children}: {children: React.ReactChild}) => (
-			<StoriesContext.Provider value={{dispatch, stories: []}}>
-				<PrefsContext.Provider value={{prefs, dispatch: jest.fn()}}>
-					<StoryFormatsContext.Provider
-						value={{
-							dispatch: jest.fn(),
-							formats: []
-						}}
-					>
-						{children}
-					</StoryFormatsContext.Provider>
-				</PrefsContext.Provider>
-			</StoriesContext.Provider>
-		);
+		const wrapper = makeWrapper({allFormats: [], dispatch, prefs});
 
 		const {result} = renderHook(() => useStoriesRepair(), {wrapper});
 
 		result.current();
-		expect(dispatch).not.toBeCalled();
+		expect(dispatch).not.toHaveBeenCalled();
 		oldError.mockRestore();
 	});
 });

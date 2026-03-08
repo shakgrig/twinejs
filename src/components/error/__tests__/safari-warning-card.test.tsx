@@ -3,14 +3,14 @@ import * as React from 'react';
 import {SafariWarningCard} from '../safari-warning-card';
 
 describe('<SafariWarningCard>', () => {
-	afterEach(() => delete (window.navigator as any).standalone);
+	afterEach(() => delete (globalThis.navigator as any).standalone);
 
 	function renderWithUserAgent(agent: string, standalone: boolean = false) {
 		if (standalone) {
-			(window.navigator as any).standalone = standalone;
+			(globalThis.navigator as any).standalone = standalone;
 		}
 
-		jest.spyOn(window.navigator, 'userAgent', 'get').mockReturnValue(agent);
+		jest.spyOn(globalThis.navigator, 'userAgent', 'get').mockReturnValue(agent);
 		return render(<SafariWarningCard />);
 	}
 
